@@ -11,7 +11,7 @@
    6. Paste it as WORKER_URL in app.js
 ============================================================ */
 
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
@@ -57,6 +57,16 @@ export default {
     });
 
     const data = await geminiRes.json();
+
+    if (!geminiRes.ok || data.error) {
+      const errMsg = data.error?.message ?? `HTTP ${geminiRes.status}`;
+      console.error('Gemini error:', errMsg);
+      return new Response(JSON.stringify({ error: errMsg }), {
+        status: 502,
+        headers: { 'Content-Type': 'application/json', ...CORS },
+      });
+    }
+
     const output = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
 
     return new Response(JSON.stringify({ output }), {
