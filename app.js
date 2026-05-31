@@ -1,8 +1,8 @@
 /* ============================================
-   SMV Kontorhjælper — app.js
+   SMV Kontorhjælper — app.js v2
    ============================================ */
 
-// ── Language system ──────────────────────────────────────────────────────────
+// ── Language strings ──────────────────────────────────────────────────────────
 
 const LANG = {
   da: {
@@ -12,7 +12,6 @@ const LANG = {
     introText: 'Indsæt dine rå noter, vælg hvad du vil lave, og få et brugbart udkast med det samme.',
     toolsLabel: 'Vælg et værktøj',
     notesLabel: 'Dine rå noter',
-    notesPlaceholder: 'Skriv dine rå noter her... Sæt bare stikord ned. Det behøver ikke være perfekt.',
     customerLabel: 'Kundenavn (valgfrit)',
     companyLabel: 'Firmanavn (valgfrit)',
     priceLabel: 'Pris (valgfrit)',
@@ -37,8 +36,8 @@ const LANG = {
     validationMsg: 'Skriv venligst dine noter inden du genererer.',
     clearConfirm: 'Er du sikker på, at du vil rydde? Det sletter udkastet.',
     changeToolBtn: 'Skift værktøj',
-    yourNotes: 'Dine noter',
     optionalFields: 'Ekstra felter (valgfrit)',
+    tipLabel: 'Tip:',
   },
   en: {
     appName: 'SMV Office Helper',
@@ -47,7 +46,6 @@ const LANG = {
     introText: 'Enter your rough notes, choose what you need, and get a usable draft immediately.',
     toolsLabel: 'Choose a tool',
     notesLabel: 'Your rough notes',
-    notesPlaceholder: 'Write your rough notes here... Just jot down key points. It doesn\'t need to be perfect.',
     customerLabel: 'Customer name (optional)',
     companyLabel: 'Company name (optional)',
     priceLabel: 'Price (optional)',
@@ -72,12 +70,12 @@ const LANG = {
     validationMsg: 'Please write your notes before generating.',
     clearConfirm: 'Are you sure you want to clear? This will delete the draft.',
     changeToolBtn: 'Change tool',
-    yourNotes: 'Your notes',
     optionalFields: 'Extra fields (optional)',
+    tipLabel: 'Tip:',
   }
 };
 
-// ── Tool definitions ─────────────────────────────────────────────────────────
+// ── Tool definitions ──────────────────────────────────────────────────────────
 
 const TOOLS = [
   {
@@ -87,6 +85,8 @@ const TOOLS = [
     titleEn: 'Customer Email',
     descDa: 'Gør rå noter til en høflig professionel mail',
     descEn: 'Turn rough notes into a polite professional email',
+    hintDa: 'F.eks: kundens forespørgsel om pris på hjemmeside. vi tilbyder design og vedligehold. pris ca 15.000 kr. vi sender tilbud inden for 2 dage',
+    hintEn: 'E.g: customer asked about website price. we offer design and maintenance. price approx 15,000. we will send quote within 2 days',
     fields: ['customer', 'company', 'tone'],
   },
   {
@@ -96,6 +96,8 @@ const TOOLS = [
     titleEn: 'Quotation Text',
     descDa: 'Lav en struktureret tilbudstekst fra dine noter',
     descEn: 'Create a structured quotation from your notes',
+    hintDa: 'F.eks: nyt tag på villa. fjerne gammelt tag, montere nyt tegltag, inkl. rygning og inddækning. arbejde tager ca 3 dage. stillas inkluderet',
+    hintEn: 'E.g: new roof on house. remove old tiles, fit new clay roof, incl. ridge and flashing. work takes approx 3 days. scaffolding included',
     fields: ['customer', 'company', 'price', 'deadline', 'tone'],
   },
   {
@@ -105,6 +107,8 @@ const TOOLS = [
     titleEn: 'Payment Reminder',
     descDa: 'Høflig betalingspåmindelse uden at lyde aggressiv',
     descEn: 'Polite payment reminder without sounding aggressive',
+    hintDa: 'F.eks: faktura 2024-047 sendt 15. april. beløb 8.500 kr. ikke modtaget betaling endnu. anden rykker. betalingsfrist var 30 dage',
+    hintEn: 'E.g: invoice 2024-047 sent April 15th. amount 8,500. no payment received yet. second reminder. payment terms were 30 days',
     fields: ['customer', 'company', 'price', 'deadline', 'tone'],
   },
   {
@@ -114,6 +118,8 @@ const TOOLS = [
     titleEn: 'Facebook Post',
     descDa: 'Lokalt opslag til din virksomhedsside',
     descEn: 'Local post for your business page',
+    hintDa: 'F.eks: sommertilbud på vinduespudsning. 20% rabat hele juli. gratis tilbud på stedet. betjener hele nordsjælland',
+    hintEn: 'E.g: summer offer on window cleaning. 20% discount all of July. free quote on site. serving all of north zealand',
     fields: ['company', 'tone'],
   },
   {
@@ -123,6 +129,8 @@ const TOOLS = [
     titleEn: 'SOP / Work Instruction',
     descDa: 'Struktureret arbejdsinstruktion fra dine noter',
     descEn: 'Structured work instruction from your notes',
+    hintDa: 'F.eks: modtagelse af varer. kontroller antal mod følgeseddel. registrer i lager-system. afvigelser meldes til leder. varer sættes i reol A-C efter kategori',
+    hintEn: 'E.g: receiving goods. check quantity against delivery note. register in stock system. deviations reported to manager. goods placed on shelf A-C by category',
     fields: ['company'],
   },
   {
@@ -132,6 +140,8 @@ const TOOLS = [
     titleEn: 'Checklist',
     descDa: 'Gør noter til en praktisk tjekliste',
     descEn: 'Turn notes into a practical checklist',
+    hintDa: 'F.eks: åbning af butik:\nnøgler og alarm\nkasse tænd\nvarmer tænd\nkaffemaskine\nfacebook opslag\nhent post\nflyt borde ud',
+    hintEn: 'E.g: opening the shop:\nkeys and alarm\ncash register on\nheating on\ncoffee machine\nfacebook post\ncollect mail\nmove tables outside',
     fields: [],
   },
   {
@@ -141,7 +151,9 @@ const TOOLS = [
     titleEn: 'Employee Onboarding',
     descDa: 'Onboardingplan for en ny medarbejder',
     descEn: 'Onboarding plan for a new employee',
-    fields: ['customer', 'company'],
+    hintDa: 'F.eks: ny elektriker. skal lære vores sagsstyringssystem. introduceres til faste kunder. sikkerhedskursus uge 2. kørekort klasse B nødvendigt',
+    hintEn: 'E.g: new electrician. needs to learn our case management system. introduce to regular customers. safety course week 2. class B driving license required',
+    fields: ['customer', 'company', 'deadline'],
   },
   {
     id: 'professionel',
@@ -150,9 +162,85 @@ const TOOLS = [
     titleEn: 'Make Text Professional',
     descDa: 'Omskriv rodet tekst til professionelt sprog',
     descEn: 'Rewrite messy text into professional language',
+    hintDa: 'Indsæt din ufærdige tekst her — stikord, halvfærdige sætninger eller bare noget du vil have til at lyde mere professionelt.',
+    hintEn: 'Paste your unfinished text here — bullet points, half-finished sentences, or anything you want to sound more professional.',
     fields: ['tone'],
   },
 ];
+
+// ── Word replacement dictionaries ─────────────────────────────────────────────
+
+const WORD_REPLACEMENTS = {
+  da: [
+    [/\bbare\b/gi, 'blot'],
+    [/\blige\b(?= \w)/gi, 'venligst'],
+    [/\bprøv(e|er|ede)?\b/gi, (_, s) => 'bestræb' + (s === 'er' ? 'er sig' : s === 'ede' ? 'ede sig' : ' dig')],
+    [/\bproblem(et|er|erne)?\b/gi, (_, s) => 'udfordring' + (s || '')],
+    [/\bting(ene)?\b/gi, (_, s) => 'forhold' + (s ? 'ene' : 'et')],
+    [/\bhurtigt\b/gi, 'rettidigt'],
+    [/\bsnart\b/gi, 'inden for kort tid'],
+    [/\bmeget\b/gi, 'særdeles'],
+    [/\bret\b(?= [a-zæøå])/gi, 'temmelig'],
+    [/\bkigge\b|\bkigger\b|\bkiggede\b/gi, 'gennemgå'],
+    [/\bfortælle\b|\bfortæller\b/gi, 'informere'],
+    [/\bsige til\b/gi, 'meddele'],
+    [/\bbruge(r|s|de)?\b/gi, (_, s) => 'anvende' + (s || '')],
+    [/\blave(r|de|t)?\b/gi, 'udarbejde'],
+    [/\bgøre\b|\bgør\b/gi, 'foretage'],
+    [/\bhjælp(e|er)?\b/gi, 'assistere'],
+    [/\bvise\b|\bviser\b/gi, 'demonstrere'],
+    [/\btale med\b/gi, 'kommunikere med'],
+    [/\bsende\b|\bsender\b/gi, 'fremsende'],
+    [/\bfå\b(?= \w)/gi, 'modtage'],
+    [/\bgive\b|\bgiver\b/gi, 'tilvejebringe'],
+    [/\bokay\b|\bok\b/gi, 'i orden'],
+    [/\bfed\b(?= [a-zæøå]|\.|,|!|\?)/gi, 'fremragende'],
+    [/\bsuper\b(?= [a-zæøå])/gi, 'særdeles'],
+    [/\bdårlig(t|e)?\b/gi, (_, s) => 'utilfredsstillende' + (s || '')],
+    [/\bbillig(t|e)?\b/gi, (_, s) => 'prisvenlig' + (s || '')],
+    [/\bstarte\b|\bstarter\b/gi, 'igangsætte'],
+    [/\bafslutte\b|\bafslutter\b/gi, 'færdiggøre'],
+    [/\bkøbe\b|\bkøber\b/gi, 'erhverve'],
+    [/\bsælge\b|\bsælger\b/gi, 'udbyde'],
+    [/\bspørge\b|\bspørger\b/gi, 'forespørge'],
+    [/\bringe\b|\bringer\b/gi, 'kontakte telefonisk'],
+    [/\bskrive\b|\bskriver\b/gi, 'fremsende skriftligt'],
+  ],
+  en: [
+    [/\bjust\b/gi, 'simply'],
+    [/\bpretty\b(?= [a-z])/gi, 'rather'],
+    [/\bstuff\b/gi, 'matters'],
+    [/\bthings\b/gi, 'matters'],
+    [/\bproblem(s)?\b/gi, (_, s) => 'challenge' + (s || '')],
+    [/\btry\b/gi, 'endeavour'],
+    [/\buse\b/gi, 'utilise'],
+    [/\bshow\b/gi, 'demonstrate'],
+    [/\bfix\b/gi, 'resolve'],
+    [/\bstart\b/gi, 'commence'],
+    [/\bend\b(?= |\.|,)/gi, 'conclude'],
+    [/\bbuy\b/gi, 'acquire'],
+    [/\bsell\b/gi, 'offer'],
+    [/\btell\b/gi, 'inform'],
+    [/\bhelp\b/gi, 'assist'],
+    [/\bask\b/gi, 'enquire'],
+    [/\bsend\b/gi, 'forward'],
+    [/\bcheck\b/gi, 'review'],
+    [/\bget\b(?= \w)/gi, 'obtain'],
+    [/\blook at\b/gi, 'review'],
+    [/\bquickly\b/gi, 'promptly'],
+    [/\bsoon\b/gi, 'at the earliest opportunity'],
+    [/\bbig\b/gi, 'substantial'],
+    [/\bsmall\b/gi, 'limited'],
+    [/\bgood\b/gi, 'satisfactory'],
+    [/\bbad\b/gi, 'unsatisfactory'],
+    [/\bcheap\b/gi, 'cost-effective'],
+    [/\bokay\b|\bok\b/gi, 'acceptable'],
+    [/\bcool\b/gi, 'excellent'],
+    [/\bnice\b/gi, 'commendable'],
+    [/\bstuff\b/gi, 'material'],
+    [/\bkind of\b/gi, 'somewhat'],
+  ]
+};
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
@@ -161,7 +249,7 @@ let selectedTool = null;
 let currentOutput = '';
 let drafts = [];
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Core helpers ──────────────────────────────────────────────────────────────
 
 function t(key) {
   return LANG[currentLang][key] || LANG['da'][key] || key;
@@ -173,6 +261,10 @@ function toolTitle(tool) {
 
 function toolDesc(tool) {
   return currentLang === 'en' ? tool.descEn : tool.descDa;
+}
+
+function toolHint(tool) {
+  return currentLang === 'en' ? tool.hintEn : tool.hintDa;
 }
 
 function formatDate(ts) {
@@ -199,6 +291,627 @@ function today() {
   return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
 }
 
+function capitalizeFirst(str) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function randomPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ── Note processing ───────────────────────────────────────────────────────────
+
+// Splits raw notes into a clean array of sentences/items
+function processNotes(notes) {
+  return notes
+    .split(/[\n\r]/)
+    .flatMap(line => line.split(/(?<=[.!?])\s+/))
+    .map(s => s.replace(/^[-–•*\d.)>\s]+/, '').trim())
+    .filter(s => s.length > 2)
+    .map(s => {
+      s = capitalizeFirst(s.trim());
+      if (!/[.!?:,]$/.test(s)) s += '.';
+      return s;
+    });
+}
+
+// Joins sentences into a flowing paragraph with connectors
+function buildParagraph(sentences, lang, toneStyle) {
+  if (!sentences || sentences.length === 0) return '';
+  if (sentences.length === 1) return sentences[0];
+
+  const connectors = lang === 'da'
+    ? toneStyle === 'direct'
+      ? ['Desuden: ', 'Hertil: ', 'Endvidere: ']
+      : ['Derudover ', 'Vi skal hertil tilføje, at ', 'Vi kan ligeledes bekræfte, at ', 'I forlængelse heraf ']
+    : toneStyle === 'direct'
+      ? ['Additionally: ', 'Furthermore: ', 'Also: ']
+      : ['Furthermore, ', 'We would also like to add that ', 'We can also confirm that ', 'In addition, '];
+
+  return sentences.map((s, i) => {
+    if (i === 0) return s;
+    const connector = connectors[(i - 1) % connectors.length];
+    // Lowercase first letter after connector if it's a full word connector
+    if (connector.endsWith(' ') && !connector.endsWith(': ')) {
+      return connector + s.charAt(0).toLowerCase() + s.slice(1);
+    }
+    return connector + s;
+  }).join(' ');
+}
+
+// Converts sentences to bullet points
+function notesToBullets(sentences) {
+  return sentences.map(s => `• ${s}`).join('\n');
+}
+
+// Converts sentences to numbered steps
+function notesToSteps(sentences, lang) {
+  const da = lang === 'da';
+  if (sentences.length === 0) {
+    return [da ? '1. [Beskriv første trin]' : '1. [Describe first step]'];
+  }
+  return sentences.map((s, i) => `${i + 1}. ${s}`);
+}
+
+// ── Professional text rewriter ────────────────────────────────────────────────
+
+function applyWordReplacements(text, lang) {
+  const replacements = WORD_REPLACEMENTS[lang] || [];
+  let result = text;
+  for (const [pattern, replacement] of replacements) {
+    result = result.replace(pattern, replacement);
+  }
+  return result;
+}
+
+function rewriteSentenceProfessionally(sentence, lang, toneStyle) {
+  let s = sentence.trim();
+  if (!s) return s;
+
+  // Apply word-level replacements
+  s = applyWordReplacements(s, lang);
+
+  // Ensure proper ending
+  if (!/[.!?]$/.test(s)) s += '.';
+
+  // Formal sentence starters for formal tone
+  if (toneStyle === 'formal') {
+    const startersDa = [
+      'Vi ønsker at informere om, at ',
+      'Det skal bemærkes, at ',
+      'Vi kan bekræfte, at ',
+      'Vi henleder opmærksomheden på, at ',
+    ];
+    const startersEn = [
+      'We would like to inform you that ',
+      'Please note that ',
+      'We can confirm that ',
+      'We draw your attention to the fact that ',
+    ];
+    const starters = lang === 'da' ? startersDa : startersEn;
+    // Only add a formal starter to some sentences, not all
+    if (Math.random() > 0.5 && s.length < 120) {
+      const starter = randomPick(starters);
+      s = starter + s.charAt(0).toLowerCase() + s.slice(1);
+    }
+  }
+
+  return capitalizeFirst(s);
+}
+
+// ── Template generators ───────────────────────────────────────────────────────
+// NOTE: Replace generateDraft() content with a real AI API call when ready.
+
+function generateDraft(toolId, formData) {
+  /* ── FUTURE AI HOOK ────────────────────────────────────────────────────────
+     Replace the switch block below with an API call, e.g.:
+
+     const response = await fetch('/api/generate', {
+       method: 'POST',
+       headers: { 'Content-Type': 'application/json' },
+       body: JSON.stringify({ tool: toolId, lang: currentLang, ...formData })
+     });
+     const { text } = await response.json();
+     return text;
+
+     For Claude API (claude-sonnet-4-6) via Vercel/Netlify serverless function:
+     Pass tool, notes, lang, tone, and optional fields to your proxy endpoint.
+  ──────────────────────────────────────────────────────────────────────────── */
+
+  const { notes, customer, company, price, deadline, tone } = formData;
+  const da = currentLang === 'da';
+
+  const toneStyle = tone === t('tones')[2] ? 'direct'
+    : tone === t('tones')[1] ? 'formal'
+    : 'friendly';
+
+  const sentences = processNotes(notes);
+  const bodyParagraph = buildParagraph(sentences, currentLang, toneStyle);
+
+  switch (toolId) {
+
+    // ── 1. Kundemail ──────────────────────────────────────────────────────
+    case 'kundemail': {
+      const greeting = customer
+        ? (da ? `Kære ${customer},` : `Dear ${customer},`)
+        : (da ? 'Kære kunde,' : 'Dear customer,');
+
+      const openers = da ? {
+        friendly: [
+          'Mange tak for din henvendelse — det var en fornøjelse at høre fra dig.',
+          'Tak for din mail. Vi sætter stor pris på din interesse.',
+          'Mange tak for, at du kontaktede os. Vi er glade for at høre fra dig.',
+        ],
+        formal: [
+          'Vi bekræfter hermed modtagelsen af din henvendelse og takker for din interesse.',
+          'Vi har modtaget din forespørgsel og vender tilbage med det samme.',
+          'Tak for din henvendelse. Vi behandler den med høj prioritet.',
+        ],
+        direct: [
+          'Tak for din henvendelse.',
+          'Vi har modtaget din besked.',
+          'Tak for din mail.',
+        ],
+      } : {
+        friendly: [
+          'Thank you for reaching out — it\'s great to hear from you.',
+          'Thank you for your message. We really appreciate your interest.',
+          'Many thanks for contacting us. We\'re happy to hear from you.',
+        ],
+        formal: [
+          'We hereby confirm receipt of your enquiry and thank you for your interest.',
+          'We have received your request and will respond promptly.',
+          'Thank you for your enquiry. We are treating it with high priority.',
+        ],
+        direct: [
+          'Thank you for your enquiry.',
+          'We have received your message.',
+          'Thank you for your email.',
+        ],
+      };
+
+      const closers = da ? {
+        friendly: 'Tøv endelig ikke med at kontakte os, hvis du har spørgsmål eller ønsker at høre mere. Vi glæder os til at hjælpe dig videre.',
+        formal: 'Vi ser frem til et godt samarbejde og vender tilbage hurtigst muligt med yderligere information, såfremt det måtte ønskes.',
+        direct: 'Kontakt os, hvis du har spørgsmål. Vi vender hurtigt tilbage.',
+      } : {
+        friendly: 'Please don\'t hesitate to reach out if you have any questions or would like to know more. We look forward to helping you.',
+        formal: 'We look forward to a productive collaboration and will provide further information upon request at the earliest opportunity.',
+        direct: 'Contact us if you have any questions. We will respond promptly.',
+      };
+
+      const sign = company || (da ? '[Virksomhedsnavn]' : '[Company name]');
+
+      return [
+        greeting,
+        '',
+        randomPick(openers[toneStyle]),
+        '',
+        bodyParagraph,
+        '',
+        closers[toneStyle],
+        '',
+        da ? 'Med venlig hilsen' : 'Kind regards,',
+        sign,
+      ].join('\n');
+    }
+
+    // ── 2. Tilbudstekst ───────────────────────────────────────────────────
+    case 'tilbud': {
+      const sign = company || (da ? '[Virksomhedsnavn]' : '[Company name]');
+
+      const introLines = da ? [
+        `Vi takker for muligheden for at afgive tilbud og fremsender hermed vores tilbud på den ønskede opgave.`,
+        `Med reference til din forespørgsel fremsender vi hermed vores tilbud.`,
+        `Vi er glade for at kunne fremsende følgende tilbud til dig.`,
+      ] : [
+        `Thank you for the opportunity to submit a quotation. Please find our offer below.`,
+        `With reference to your enquiry, we are pleased to submit the following quotation.`,
+        `We are glad to present the following offer for the requested work.`,
+      ];
+
+      const scopeLines = sentences.map(s => `  • ${s}`);
+
+      const terms = da ? [
+        price ? `Pris: ${price} (ekskl. moms)` : '• Pris aftales nærmere efter godkendelse',
+        deadline ? `Tilbuddet er gyldigt til: ${deadline}` : '• Tilbud er gyldigt i 30 dage fra dags dato',
+        '• Eventuelle tillægsopgaver aftales og faktureres særskilt',
+        '• Arbejdet igangsættes efter skriftlig accept',
+        '• Betaling: 8 dage netto efter fakturadato',
+      ] : [
+        price ? `Price: ${price} (excl. VAT)` : '• Price to be agreed after approval',
+        deadline ? `Quotation valid until: ${deadline}` : '• Quotation valid for 30 days from today',
+        '• Any additional work will be agreed and invoiced separately',
+        '• Work commences upon written acceptance',
+        '• Payment: net 8 days from invoice date',
+      ];
+
+      const outro = da ? {
+        friendly: 'Vi håber, at ovenstående lever op til dine forventninger. Kontakt os gerne, hvis du har spørgsmål eller ønsker justeringer — vi finder altid en god løsning.',
+        formal: 'Vi fremsender gerne yderligere dokumentation eller afholder et møde for at gennemgå tilbuddet i detaljer.',
+        direct: `Bekræft venligst tilbuddet${deadline ? ' inden ' + deadline : ' hurtigst muligt'}.`,
+      } : {
+        friendly: 'We hope this quotation meets your expectations. Feel free to reach out if you have questions or would like any adjustments.',
+        formal: 'We are happy to provide further documentation or arrange a meeting to review the quotation in detail.',
+        direct: `Please confirm the quotation${deadline ? ' by ' + deadline : ' as soon as possible'}.`,
+      };
+
+      return [
+        da ? `TILBUD${company ? ' — ' + company.toUpperCase() : ''}` : `QUOTATION${company ? ' — ' + company.toUpperCase() : ''}`,
+        da ? `Dato: ${today()}` : `Date: ${today()}`,
+        customer ? (da ? `Att.: ${customer}` : `Att.: ${customer}`) : '',
+        '',
+        '══════════════════════════════════════',
+        da ? 'OPGAVEBESKRIVELSE' : 'SCOPE OF WORK',
+        '══════════════════════════════════════',
+        '',
+        randomPick(introLines),
+        '',
+        da ? 'Opgaven omfatter:' : 'The work includes:',
+        ...scopeLines,
+        '',
+        '══════════════════════════════════════',
+        da ? 'BETINGELSER' : 'TERMS',
+        '══════════════════════════════════════',
+        '',
+        ...terms,
+        '',
+        '══════════════════════════════════════',
+        '',
+        outro[toneStyle],
+        '',
+        da ? 'Med venlig hilsen' : 'Kind regards,',
+        sign,
+      ].filter(l => l !== '').join('\n');
+    }
+
+    // ── 3. Rykkermail ─────────────────────────────────────────────────────
+    case 'rykker': {
+      const greeting = customer
+        ? (da ? `Kære ${customer},` : `Dear ${customer},`)
+        : (da ? 'Kære kunde,' : 'Dear customer,');
+
+      const sign = company || (da ? '[Virksomhedsnavn]' : '[Company name]');
+
+      // Try to detect invoice number from notes
+      const invoiceMatch = notes.match(/(?:faktura|invoice|fakt\.?|inv\.?)\s*[#nr.]*\s*([\w-]+)/i);
+      const invoiceRef = invoiceMatch ? invoiceMatch[1] : null;
+
+      const priceStr = price
+        ? (da ? ` på kr. ${price}` : ` for ${price}`)
+        : '';
+      const invoiceStr = invoiceRef
+        ? (da ? ` (faktura ${invoiceRef})` : ` (invoice ${invoiceRef})`)
+        : '';
+      const dueStr = deadline
+        ? (da ? ` med forfaldsdato ${deadline}` : ` with a due date of ${deadline}`)
+        : '';
+
+      const openers = da ? {
+        friendly: `Vi tillader os venligst at minde dig om en udestående betaling${priceStr}${invoiceStr}${dueStr}.`,
+        formal: `I henhold til vores betalingsbetingelser henleder vi opmærksomheden på en forfalden betaling${priceStr}${invoiceStr}${dueStr}.`,
+        direct: `Vi rykker hermed for betaling${priceStr}${invoiceStr}${dueStr}.`,
+      } : {
+        friendly: `We kindly remind you of an outstanding payment${priceStr}${invoiceStr}${dueStr}.`,
+        formal: `In accordance with our payment terms, we draw your attention to an overdue payment${priceStr}${invoiceStr}${dueStr}.`,
+        direct: `We hereby chase payment${priceStr}${invoiceStr}${dueStr}.`,
+      };
+
+      const extras = sentences.filter(s => !s.toLowerCase().includes('faktura') && !s.toLowerCase().includes('invoice'));
+      const extraPara = extras.length > 0 ? buildParagraph(extras, currentLang, toneStyle) : '';
+
+      const closers = da ? {
+        friendly: 'Hvis betalingen allerede er afsendt, beder vi dig venligst se bort fra denne påmindelse. Kontakt os endelig, hvis der er spørgsmål til fakturaen — vi finder gerne en løsning.',
+        formal: 'Såfremt betalingen allerede er effektueret, bedes dette meddeles. I modsat fald beder vi om betaling inden for 5 hverdage.',
+        direct: 'Overførsel bedes foretaget snarest. Kontakt os ved spørgsmål.',
+      } : {
+        friendly: 'If payment has already been sent, please disregard this reminder. Feel free to contact us if you have any questions about the invoice — we\'re happy to find a solution.',
+        formal: 'If payment has already been made, please notify us accordingly. Otherwise, we kindly request payment within 5 business days.',
+        direct: 'Please arrange payment immediately. Contact us if you have questions.',
+      };
+
+      return [
+        greeting,
+        '',
+        openers[toneStyle],
+        '',
+        extraPara || '',
+        extraPara ? '' : null,
+        closers[toneStyle],
+        '',
+        da ? 'Med venlig hilsen' : 'Kind regards,',
+        sign,
+      ].filter(l => l !== null).join('\n');
+    }
+
+    // ── 4. Facebook-opslag ────────────────────────────────────────────────
+    case 'facebook': {
+      const co = company || (da ? 'os' : 'us');
+      const coNamed = company || (da ? 'Vi' : 'We');
+
+      // Build an engaging hook from the first sentence
+      const hook = sentences[0] || notes.split('\n')[0];
+      const body = sentences.slice(1);
+
+      const hooks = da ? {
+        friendly: [`🔥 ${hook}`, `✨ ${hook}`, `👉 ${hook}`],
+        formal: [`${coNamed} er glade for at kunne tilbyde: ${hook.toLowerCase().replace(/\.$/, '')}`, `Ny mulighed hos ${co}: ${hook}`],
+        direct: [`${hook}`],
+      } : {
+        friendly: [`🔥 ${hook}`, `✨ ${hook}`, `👉 ${hook}`],
+        formal: [`${coNamed} is pleased to offer: ${hook.toLowerCase().replace(/\.$/, '')}`, `New opportunity at ${co}: ${hook}`],
+        direct: [`${hook}`],
+      };
+
+      const bodyText = body.length > 0
+        ? buildParagraph(body, currentLang, toneStyle)
+        : '';
+
+      const ctas = da ? {
+        friendly: [`Skriv til os i dag — vi er klar til at hjælpe! 😊`, `Ring eller skriv til os — vi glæder os til at høre fra dig! 📞`, `Book tid hos ${co} allerede i dag — det er nemt og uforpligtende! 👇`],
+        formal: [`Kontakt ${co} for yderligere information.`, `Vi besvarer gerne henvendelser om ovenstående.`],
+        direct: [`Kontakt os nu. 👇`, `Ring eller skriv i dag.`],
+      } : {
+        friendly: [`Message us today — we\'re ready to help! 😊`, `Call or message us — we\'d love to hear from you! 📞`, `Book with ${co} today — easy and no obligation! 👇`],
+        formal: [`Contact ${co} for further information.`, `We are happy to respond to enquiries about the above.`],
+        direct: [`Contact us now. 👇`, `Call or write today.`],
+      };
+
+      // Generate relevant hashtags from content keywords
+      const allText = notes.toLowerCase();
+      const hashtagsDa = ['#lokalterhvervsliv', '#småvirksomheder'];
+      const hashtagsEn = ['#localbusiness', '#smallbusiness'];
+      if (company) {
+        const tag = '#' + company.replace(/[\s\W]+/g, '');
+        if (da) hashtagsDa.push(tag); else hashtagsEn.push(tag);
+      }
+      const hashtags = da ? hashtagsDa : hashtagsEn;
+
+      return [
+        randomPick(hooks[toneStyle]),
+        '',
+        bodyText || '',
+        bodyText ? '' : null,
+        randomPick(ctas[toneStyle]),
+        '',
+        `📍 ${company || (da ? '[Bynavn]' : '[City]')}`,
+        `📞 ${da ? '[Tlf. nummer]' : '[Phone number]'}`,
+        `🌐 ${da ? '[Hjemmeside]' : '[Website]'}`,
+        '',
+        hashtags.join(' '),
+      ].filter(l => l !== null).join('\n');
+    }
+
+    // ── 5. SOP / Arbejdsinstruktion ───────────────────────────────────────
+    case 'sop': {
+      const title = sentences[0]
+        ? sentences[0].replace(/\.$/, '')
+        : (da ? 'Arbejdsinstruktion' : 'Work Instruction');
+      const steps = notesToSteps(sentences, currentLang);
+
+      // Flag sentences with safety/quality keywords
+      const stepsFormatted = steps.map(step => {
+        const lower = step.toLowerCase();
+        const isSafety = /sikker|advar|pas på|forbudt|obs|vigtigt|safety|warning|caution|important|forbidden/i.test(lower);
+        return isSafety ? step + (da ? '  ⚠️ Vigtigt!' : '  ⚠️ Important!') : step;
+      });
+
+      return [
+        da ? 'STANDARD ARBEJDSINSTRUKTION (SOP)' : 'STANDARD OPERATING PROCEDURE (SOP)',
+        company ? (da ? `Virksomhed: ${company}` : `Company: ${company}`) : '',
+        da ? `Dato: ${today()}  |  Version: 1.0` : `Date: ${today()}  |  Version: 1.0`,
+        '',
+        '══════════════════════════════════════',
+        da ? '1. FORMÅL' : '1. PURPOSE',
+        '══════════════════════════════════════',
+        da
+          ? `Denne instruktion beskriver den korrekte fremgangsmåde for: ${title.toLowerCase()}.`
+          : `This instruction describes the correct procedure for: ${title.toLowerCase()}.`,
+        '',
+        '══════════════════════════════════════',
+        da ? '2. ANSVARSFORDELING' : '2. RESPONSIBILITIES',
+        '══════════════════════════════════════',
+        da ? '• Ansvarlig for udførelse:  [Navn / stilling]' : '• Responsible for execution:  [Name / position]',
+        da ? '• Godkendt af:              [Leder / navn]' : '• Approved by:              [Manager / name]',
+        da ? '• Gælder for:               [Afdeling / alle]' : '• Applies to:               [Department / all]',
+        '',
+        '══════════════════════════════════════',
+        da ? '3. FREMGANGSMÅDE' : '3. PROCEDURE',
+        '══════════════════════════════════════',
+        '',
+        ...stepsFormatted,
+        '',
+        '══════════════════════════════════════',
+        da ? '4. KVALITET OG SIKKERHED' : '4. QUALITY & SAFETY',
+        '══════════════════════════════════════',
+        da ? '• Kontrollér resultatet, inden opgaven afleveres' : '• Verify the result before handing over the task',
+        da ? '• Overhold gældende sikkerhedsforskrifter og arbejdsmiljøregler' : '• Follow applicable safety and work environment regulations',
+        da ? '• Rapportér straks afvigelser til nærmeste leder' : '• Report deviations immediately to the nearest manager',
+        da ? '• Brug altid godkendt udstyr og materialer' : '• Always use approved equipment and materials',
+        '',
+        '══════════════════════════════════════',
+        da ? '5. AFSLUTNINGSKONTROL' : '5. COMPLETION CHECKLIST',
+        '══════════════════════════════════════',
+        da ? '[ ] Opgaven er udført korrekt og kontrolleret' : '[ ] Task completed correctly and verified',
+        da ? '[ ] Arbejdsplads efterladt i ordentlig stand' : '[ ] Workplace left in proper condition',
+        da ? '[ ] Afvigelser registreret (hvis relevant)' : '[ ] Deviations recorded (if applicable)',
+        da ? '[ ] Næste ansvarlige informeret' : '[ ] Next responsible person informed',
+        da ? '[ ] Dokumentation udfyldt og arkiveret' : '[ ] Documentation completed and filed',
+      ].filter(l => l !== '').join('\n');
+    }
+
+    // ── 6. Tjekliste ──────────────────────────────────────────────────────
+    case 'tjekliste': {
+      const rawLines = notes.split('\n').map(l => l.replace(/^[-–•*\d.)>\s]+/, '').trim()).filter(Boolean);
+      const groups = [];
+      let currentGroup = { header: '', items: [] };
+
+      rawLines.forEach(line => {
+        // Line ending with ':' or matching all-caps short text = section header
+        if ((line.endsWith(':') && line.length < 60) || /^[A-ZÆØÅ\s]{3,30}$/.test(line)) {
+          if (currentGroup.items.length > 0 || currentGroup.header) {
+            groups.push(currentGroup);
+          }
+          currentGroup = { header: line.replace(/:$/, ''), items: [] };
+        } else {
+          currentGroup.items.push(capitalizeFirst(line));
+        }
+      });
+      if (currentGroup.items.length > 0) groups.push(currentGroup);
+
+      const totalItems = rawLines.filter(l => !l.endsWith(':') && !/^[A-ZÆØÅ\s]{3,30}$/.test(l)).length;
+
+      const out = [
+        da ? 'TJEKLISTE' : 'CHECKLIST',
+        da ? `Oprettet: ${today()}` : `Created: ${today()}`,
+        da ? `Samlet antal punkter: ${totalItems}` : `Total items: ${totalItems}`,
+        '',
+      ];
+
+      if (groups.length === 0 || (groups.length === 1 && !groups[0].header)) {
+        // No grouping — simple flat list
+        const items = groups[0]?.items || [];
+        items.forEach(item => out.push(`[ ] ${item}`));
+      } else {
+        groups.forEach(g => {
+          if (g.header) {
+            out.push('');
+            out.push(`▸ ${g.header.toUpperCase()}`);
+          }
+          g.items.forEach(item => out.push(`[ ] ${item}`));
+        });
+      }
+
+      out.push('');
+      out.push('─────────────────────────────');
+      out.push(da ? `Afkrydsede punkter: ___ / ${totalItems}` : `Checked items: ___ / ${totalItems}`);
+
+      return out.join('\n');
+    }
+
+    // ── 7. Medarbejder-onboarding ─────────────────────────────────────────
+    case 'onboarding': {
+      const emp = customer || (da ? 'den nye medarbejder' : 'the new employee');
+      const co = company || (da ? '[Virksomhedsnavn]' : '[Company name]');
+      const startDate = deadline || (da ? '[indsæt startdato]' : '[insert start date]');
+
+      // Sort notes into onboarding phases if possible
+      const practicalNotes = sentences.filter(s =>
+        /system|adgang|login|kode|kort|nøgle|bil|telefon|pc|computer|access|key|phone|car|password/i.test(s)
+      );
+      const trainingNotes = sentences.filter(s =>
+        /kursus|oplæring|træning|lær|certificer|uddannelse|training|course|learn|certif/i.test(s)
+      );
+      const taskNotes = sentences.filter(s =>
+        !practicalNotes.includes(s) && !trainingNotes.includes(s)
+      );
+
+      return [
+        da ? 'ONBOARDINGPLAN' : 'ONBOARDING PLAN',
+        da ? `Medarbejder: ${emp}` : `Employee: ${emp}`,
+        da ? `Virksomhed: ${co}` : `Company: ${co}`,
+        da ? `Startdato: ${startDate}` : `Start date: ${startDate}`,
+        da ? `Udarbejdet: ${today()}` : `Created: ${today()}`,
+        '',
+        '══════════════════════════════════════',
+        da ? 'DAG 1 — VELKOMMEN' : 'DAY 1 — WELCOME',
+        '══════════════════════════════════════',
+        da ? `[ ] Velkomst og introduktion hos ${co}` : `[ ] Welcome and introduction at ${co}`,
+        da ? '[ ] Rundvisning på arbejdspladsen' : '[ ] Tour of the workplace',
+        da ? '[ ] Præsentation for kollegerne' : '[ ] Introduction to colleagues',
+        da ? '[ ] Gennemgang af praktiske regler og politikker' : '[ ] Overview of practical rules and policies',
+        da ? `[ ] Remis: ${emp} introduceres til sin primære kontaktperson` : `[ ] Note: ${emp} is introduced to their primary contact`,
+        '',
+        '══════════════════════════════════════',
+        da ? 'PRAKTISK OPSÆTNING' : 'PRACTICAL SETUP',
+        '══════════════════════════════════════',
+        da ? '[ ] Login og adgangskoder til relevante systemer' : '[ ] Logins and passwords for relevant systems',
+        da ? '[ ] Email, kalender og kommunikationsværktøjer' : '[ ] Email, calendar and communication tools',
+        da ? '[ ] Nødvendigt udstyr og arbejdsredskaber' : '[ ] Required equipment and tools',
+        da ? '[ ] Nøgler, adgangskort og parkeringspladser' : '[ ] Keys, access cards and parking',
+        ...practicalNotes.map(s => `[ ] ${s}`),
+        '',
+        '══════════════════════════════════════',
+        da ? 'FØRSTE UGE — INTRODUKTION' : 'FIRST WEEK — INTRODUCTION',
+        '══════════════════════════════════════',
+        da ? '[ ] Introduktion til arbejdsopgaver og ansvarsområder' : '[ ] Introduction to tasks and responsibilities',
+        da ? '[ ] Introduktion til vigtige samarbejdspartnere og kunder' : '[ ] Introduction to key partners and customers',
+        da ? '[ ] Gennemgang af processer og arbejdsgange' : '[ ] Overview of processes and workflows',
+        ...taskNotes.map(s => `[ ] ${s}`),
+        '',
+        '══════════════════════════════════════',
+        da ? 'OPLÆRING OG KURSER' : 'TRAINING & COURSES',
+        '══════════════════════════════════════',
+        da ? '[ ] Introduktion til interne systemer og platforme' : '[ ] Introduction to internal systems and platforms',
+        da ? '[ ] Nødvendig faglig oplæring aftalt med leder' : '[ ] Required professional training agreed with manager',
+        ...trainingNotes.map(s => `[ ] ${s}`),
+        '',
+        '══════════════════════════════════════',
+        da ? 'OPFØLGNING — FØRSTE MÅNED' : 'FOLLOW-UP — FIRST MONTH',
+        '══════════════════════════════════════',
+        da ? '[ ] Check-in møde med leder (uge 2)' : '[ ] Check-in meeting with manager (week 2)',
+        da ? '[ ] Faglig evaluering og feedback (uge 4)' : '[ ] Professional evaluation and feedback (week 4)',
+        da ? '[ ] Evt. justeringer til onboardingplanen' : '[ ] Any adjustments to the onboarding plan',
+        da ? `[ ] ${emp} bekræfter at have modtaget og forstået onboardingplanen` : `[ ] ${emp} confirms receipt and understanding of the onboarding plan`,
+        '',
+        '─────────────────────────────',
+        da ? `Underskrift (${emp}): _________________________  Dato: _______` : `Signature (${emp}): _________________________  Date: _______`,
+        da ? `Underskrift (leder): _________________________  Dato: _______` : `Signature (manager): _________________________  Date: _______`,
+      ].filter(l => l !== '').join('\n');
+    }
+
+    // ── 8. Gør tekst professionel ─────────────────────────────────────────
+    case 'professionel': {
+      // Split original into sentences
+      const originalSentences = notes
+        .split(/(?<=[.!?\n])\s+|[\n\r]+/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      // Rewrite each sentence
+      const rewritten = originalSentences.map(s =>
+        rewriteSentenceProfessionally(s, currentLang, toneStyle)
+      );
+
+      // Build into flowing paragraph(s)
+      const paragraphs = [];
+      let chunk = [];
+      rewritten.forEach((s, i) => {
+        chunk.push(s);
+        if (chunk.length === 3 || i === rewritten.length - 1) {
+          paragraphs.push(chunk.join(' '));
+          chunk = [];
+        }
+      });
+
+      const versionLabel = da
+        ? toneStyle === 'formal' ? 'FORMEL VERSION' : toneStyle === 'direct' ? 'KORT OG DIREKTE VERSION' : 'PROFESSIONEL VERSION'
+        : toneStyle === 'formal' ? 'FORMAL VERSION' : toneStyle === 'direct' ? 'SHORT & DIRECT VERSION' : 'PROFESSIONAL VERSION';
+
+      const disclaimer = da
+        ? '── Gennemgå og tilpas teksten. Dette er et udkast. ──'
+        : '── Review and adjust the text. This is a draft. ──';
+
+      return [
+        da ? '── ORIGINALTEKST ──' : '── ORIGINAL TEXT ──',
+        '',
+        notes,
+        '',
+        '',
+        `── ${versionLabel} ──`,
+        '',
+        ...paragraphs,
+        '',
+        disclaimer,
+      ].join('\n');
+    }
+
+    default:
+      return da ? 'Vælg venligst et gyldigt værktøj.' : 'Please select a valid tool.';
+  }
+}
+
 // ── LocalStorage ──────────────────────────────────────────────────────────────
 
 function loadDrafts() {
@@ -209,522 +922,6 @@ function loadDrafts() {
 
 function saveDraftsToStorage() {
   localStorage.setItem('smv_drafts', JSON.stringify(drafts));
-}
-
-// ── Template generators ──────────────────────────────────────────────────────
-// NOTE: This is where AI generation will be plugged in later.
-// Replace the switch block inside generateDraft() with an API call.
-
-function generateDraft(toolId, formData) {
-  /* ── FUTURE AI HOOK ───────────────────────────────────────────────────────
-     When you add a real AI backend, replace the switch below with:
-
-     const response = await fetch('/api/generate', {
-       method: 'POST',
-       headers: { 'Content-Type': 'application/json' },
-       body: JSON.stringify({ tool: toolId, ...formData, lang: currentLang })
-     });
-     return await response.json().then(r => r.text);
-
-     For Claude API through a serverless function (Vercel/Netlify), use:
-     body: JSON.stringify({
-       model: 'claude-sonnet-4-6',
-       tool: toolId,
-       notes: formData.notes,
-       options: { customer, company, price, deadline, tone }
-     })
-  ────────────────────────────────────────────────────────────────────────── */
-
-  const { notes, customer, company, price, deadline, tone } = formData;
-  const da = currentLang === 'da';
-
-  const greeting = customer
-    ? (da ? `Kære ${customer},` : `Dear ${customer},`)
-    : (da ? 'Kære kunde,' : 'Dear customer,');
-
-  const sign = company || (da ? 'Venlig hilsen' : 'Kind regards');
-
-  const toneStyle = tone === t('tones')[2]
-    ? 'direct'
-    : tone === t('tones')[1]
-    ? 'formal'
-    : 'friendly';
-
-  switch (toolId) {
-
-    // ── 1. Kundemail ────────────────────────────────────────────────────────
-    case 'kundemail': {
-      if (da) {
-        return [
-          greeting,
-          '',
-          `Mange tak for din henvendelse${customer ? ` og interessen, ${customer}` : ''}.`,
-          '',
-          `${notes}`,
-          '',
-          toneStyle === 'direct'
-            ? 'Vend gerne tilbage, hvis du har spørgsmål.'
-            : toneStyle === 'formal'
-            ? 'Vi ser frem til et godt samarbejde og vender tilbage hurtigst muligt med yderligere information.'
-            : 'Tøv endelig ikke med at kontakte os, hvis du har spørgsmål eller ønsker at høre mere. Vi er altid klar til at hjælpe.',
-          '',
-          `Med venlig hilsen`,
-          sign,
-        ].join('\n');
-      } else {
-        return [
-          greeting,
-          '',
-          `Thank you for reaching out${customer ? `, ${customer}` : ''}.`,
-          '',
-          `${notes}`,
-          '',
-          toneStyle === 'direct'
-            ? 'Feel free to get back to us if you have any questions.'
-            : toneStyle === 'formal'
-            ? 'We look forward to working with you and will get back to you with more information as soon as possible.'
-            : 'Please don\'t hesitate to reach out if you have any questions or would like to know more. We\'re always happy to help.',
-          '',
-          `Kind regards,`,
-          sign,
-        ].join('\n');
-      }
-    }
-
-    // ── 2. Tilbudstekst ─────────────────────────────────────────────────────
-    case 'tilbud': {
-      const priceStr = price ? (da ? `\nPris: ${price}` : `\nPrice: ${price}`) : '';
-      const deadlineStr = deadline ? (da ? `\nGyldig til: ${deadline}` : `\nValid until: ${deadline}`) : '';
-      if (da) {
-        return [
-          `TILBUD${company ? ' — ' + company.toUpperCase() : ''}`,
-          `Dato: ${today()}`,
-          customer ? `Til: ${customer}` : '',
-          '',
-          '─────────────────────────────',
-          '',
-          'BESKRIVELSE AF OPGAVE',
-          notes,
-          '',
-          '─────────────────────────────',
-          '',
-          'BETINGELSER',
-          priceStr ? `${priceStr}` : '• Pris aftales nærmere',
-          deadlineStr ? `${deadlineStr}` : '',
-          '• Prisen er ekskl. moms, med mindre andet er angivet',
-          '• Eventuelle tillægsopgaver aftales særskilt',
-          '• Arbejdet påbegyndes efter skriftlig godkendelse',
-          '',
-          '─────────────────────────────',
-          '',
-          toneStyle === 'direct'
-            ? 'Venligst bekræft tilbuddet senest ' + (deadline || 'hurtigst muligt') + '.'
-            : 'Vi håber, at ovenstående tilbud lever op til dine forventninger. Tag gerne fat i os, hvis du har spørgsmål eller ønsker justeringer.',
-          '',
-          'Med venlig hilsen',
-          sign,
-        ].filter(l => l !== '').join('\n');
-      } else {
-        return [
-          `QUOTATION${company ? ' — ' + company.toUpperCase() : ''}`,
-          `Date: ${today()}`,
-          customer ? `To: ${customer}` : '',
-          '',
-          '─────────────────────────────',
-          '',
-          'SCOPE OF WORK',
-          notes,
-          '',
-          '─────────────────────────────',
-          '',
-          'TERMS & CONDITIONS',
-          priceStr ? `${priceStr}` : '• Price to be agreed upon',
-          deadlineStr ? `${deadlineStr}` : '',
-          '• Price excludes VAT unless otherwise stated',
-          '• Any additional work will be agreed separately',
-          '• Work commences upon written approval',
-          '',
-          '─────────────────────────────',
-          '',
-          toneStyle === 'direct'
-            ? 'Please confirm this quotation by ' + (deadline || 'as soon as possible') + '.'
-            : 'We hope this quotation meets your expectations. Please get in touch if you have any questions or would like adjustments.',
-          '',
-          'Kind regards,',
-          sign,
-        ].filter(l => l !== '').join('\n');
-      }
-    }
-
-    // ── 3. Rykkermail ───────────────────────────────────────────────────────
-    case 'rykker': {
-      const amountStr = price ? (da ? ` på ${price}` : ` of ${price}`) : '';
-      const dueDateStr = deadline ? (da ? ` med forfaldsdato ${deadline}` : ` with due date ${deadline}`) : '';
-      if (da) {
-        return [
-          greeting,
-          '',
-          `Vi tillader os venligst at minde dig om en udestående betaling${amountStr}${dueDateStr}.`,
-          '',
-          notes ? notes + '\n' : '',
-          toneStyle === 'direct'
-            ? `Betalingen bedes overført hurtigst muligt. Kontakt os, hvis der er spørgsmål.`
-            : `Vi sætter pris på et hurtigt samarbejde. Hvis betalingen allerede er afsendt, bedes du se bort fra denne påmindelse. Kontakt os endelig, hvis du har spørgsmål til fakturaen eller betalingsbetingelserne — vi finder gerne en løsning.`,
-          '',
-          'Med venlig hilsen',
-          sign,
-        ].filter(l => l !== null).join('\n');
-      } else {
-        return [
-          greeting,
-          '',
-          `We would like to kindly remind you of an outstanding payment${amountStr}${dueDateStr}.`,
-          '',
-          notes ? notes + '\n' : '',
-          toneStyle === 'direct'
-            ? `Please transfer the payment as soon as possible. Contact us if you have any questions.`
-            : `We appreciate your prompt attention to this matter. If payment has already been sent, please disregard this reminder. Feel free to contact us if you have any questions about the invoice or payment terms — we're happy to find a solution.`,
-          '',
-          'Kind regards,',
-          sign,
-        ].filter(l => l !== null).join('\n');
-      }
-    }
-
-    // ── 4. Facebook-opslag ──────────────────────────────────────────────────
-    case 'facebook': {
-      const co = company || (da ? 'os' : 'us');
-      if (da) {
-        return [
-          `🔹 ${notes}`,
-          '',
-          toneStyle === 'direct'
-            ? `Tag fat i ${co} i dag — vi er klar til at hjælpe! 👇`
-            : toneStyle === 'formal'
-            ? `Hos ${co} prioriterer vi kvalitet og god service. Kontakt os gerne for mere information.`
-            : `Hos ${co} elsker vi at hjælpe vores lokale kunder. Skriv til os eller ring — vi glæder os til at høre fra dig! 😊`,
-          '',
-          `📍 ${company || '[Bynavn]'}`,
-          `📞 [Tlf. nummer]`,
-          `🌐 [Hjemmeside]`,
-          '',
-          '#lokalterhvervsliv #småvirksomheder' + (company ? ` #${company.replace(/\s+/g, '')}` : ''),
-        ].join('\n');
-      } else {
-        return [
-          `🔹 ${notes}`,
-          '',
-          toneStyle === 'direct'
-            ? `Get in touch with ${co} today — we're ready to help! 👇`
-            : toneStyle === 'formal'
-            ? `At ${co}, we prioritise quality and great service. Contact us for more information.`
-            : `At ${co}, we love helping our local customers. Message us or call — we'd love to hear from you! 😊`,
-          '',
-          `📍 ${company || '[City]'}`,
-          `📞 [Phone number]`,
-          `🌐 [Website]`,
-          '',
-          '#localbusiness #smallbusiness' + (company ? ` #${company.replace(/\s+/g, '')}` : ''),
-        ].join('\n');
-      }
-    }
-
-    // ── 5. SOP / Arbejdsinstruktion ─────────────────────────────────────────
-    case 'sop': {
-      if (da) {
-        return [
-          `ARBEJDSINSTRUKTION (SOP)`,
-          `${company ? 'Virksomhed: ' + company : ''}`,
-          `Dato: ${today()}`,
-          `Version: 1.0`,
-          '',
-          '════════════════════════════════════',
-          '1. FORMÅL',
-          '════════════════════════════════════',
-          `Denne instruktion beskriver fremgangsmåden for: ${notes.split('\n')[0] || 'opgaven'}`,
-          '',
-          '════════════════════════════════════',
-          '2. ANSVARSFORDELING',
-          '════════════════════════════════════',
-          '• Ansvarlig: [Navn / stilling]',
-          '• Godkendt af: [Leder / navn]',
-          '',
-          '════════════════════════════════════',
-          '3. FREMGANGSMÅDE',
-          '════════════════════════════════════',
-          ...buildNumberedSteps(notes, da),
-          '',
-          '════════════════════════════════════',
-          '4. KVALITET / SIKKERHED',
-          '════════════════════════════════════',
-          '• Kontrollér resultatet inden aflevering',
-          '• Overhold gældende sikkerhedsforskrifter',
-          '• Rapportér afvigelser til nærmeste leder',
-          '',
-          '════════════════════════════════════',
-          '5. AFSLUTNINGSKONTROL',
-          '════════════════════════════════════',
-          '[ ] Opgaven er udført korrekt',
-          '[ ] Arbejdsplads ryddet',
-          '[ ] Afvigelser registreret (hvis relevant)',
-          '[ ] Næste skridt sat i gang',
-        ].filter(l => l !== '').join('\n');
-      } else {
-        return [
-          `STANDARD OPERATING PROCEDURE (SOP)`,
-          `${company ? 'Company: ' + company : ''}`,
-          `Date: ${today()}`,
-          `Version: 1.0`,
-          '',
-          '════════════════════════════════════',
-          '1. PURPOSE',
-          '════════════════════════════════════',
-          `This instruction describes the procedure for: ${notes.split('\n')[0] || 'the task'}`,
-          '',
-          '════════════════════════════════════',
-          '2. RESPONSIBILITIES',
-          '════════════════════════════════════',
-          '• Responsible: [Name / position]',
-          '• Approved by: [Manager / name]',
-          '',
-          '════════════════════════════════════',
-          '3. PROCEDURE',
-          '════════════════════════════════════',
-          ...buildNumberedSteps(notes, da),
-          '',
-          '════════════════════════════════════',
-          '4. QUALITY / SAFETY',
-          '════════════════════════════════════',
-          '• Check the result before delivery',
-          '• Follow applicable safety regulations',
-          '• Report deviations to the nearest manager',
-          '',
-          '════════════════════════════════════',
-          '5. COMPLETION CHECK',
-          '════════════════════════════════════',
-          '[ ] Task completed correctly',
-          '[ ] Workspace tidied',
-          '[ ] Deviations recorded (if applicable)',
-          '[ ] Next steps initiated',
-        ].filter(l => l !== '').join('\n');
-      }
-    }
-
-    // ── 6. Tjekliste ────────────────────────────────────────────────────────
-    case 'tjekliste': {
-      const lines = notes.split('\n').map(l => l.trim()).filter(Boolean);
-      if (da) {
-        const groups = groupLines(lines);
-        let out = ['TJEKLISTE', `Oprettet: ${today()}`, ''];
-        groups.forEach(g => {
-          out.push(g.header ? `\n▸ ${g.header.toUpperCase()}` : '');
-          g.items.forEach(item => out.push(`[ ] ${item}`));
-        });
-        out.push('', '─────────────────────────────');
-        out.push(`Samlet antal punkter: ${lines.length}`);
-        return out.join('\n');
-      } else {
-        const groups = groupLines(lines);
-        let out = ['CHECKLIST', `Created: ${today()}`, ''];
-        groups.forEach(g => {
-          out.push(g.header ? `\n▸ ${g.header.toUpperCase()}` : '');
-          g.items.forEach(item => out.push(`[ ] ${item}`));
-        });
-        out.push('', '─────────────────────────────');
-        out.push(`Total items: ${lines.length}`);
-        return out.join('\n');
-      }
-    }
-
-    // ── 7. Medarbejder-onboarding ───────────────────────────────────────────
-    case 'onboarding': {
-      const emp = customer || (da ? 'den nye medarbejder' : 'the new employee');
-      const co = company || (da ? 'virksomheden' : 'the company');
-      if (da) {
-        return [
-          `ONBOARDINGPLAN`,
-          `Medarbejder: ${emp}`,
-          `Virksomhed: ${co}`,
-          `Startdato: ${deadline || '[indsæt dato]'}`,
-          `Udarbejdet: ${today()}`,
-          '',
-          '════════════════════════════════════',
-          'DAG 1 — VELKOMMEN',
-          '════════════════════════════════════',
-          '[ ] Velkomst og rundvisning',
-          '[ ] Præsentation for kolleger',
-          '[ ] Opsætning af arbejdsplads (PC, adgange, nøgler)',
-          '[ ] Gennemgang af praktiske regler',
-          `[ ] Tillykke og god arbejdslyst, ${emp}!`,
-          '',
-          '════════════════════════════════════',
-          'FØRSTE UGE',
-          '════════════════════════════════════',
-          '[ ] Introduktion til arbejdsopgaver',
-          '[ ] Oplæring i systemer og værktøjer',
-          '[ ] Møde med nærmeste leder',
-          '[ ] Gennemgang af virksomhedspolitikker',
-          notes ? '\nOPGAVE-SPECIFIKKE NOTER:\n' + notes : '',
-          '',
-          '════════════════════════════════════',
-          'FØRSTE MÅNED',
-          '════════════════════════════════════',
-          '[ ] Selvstændigt arbejde med støtte',
-          '[ ] Check-in møde med leder (uge 2)',
-          '[ ] Opfølgningsgespräch (uge 4)',
-          '[ ] Feedback og evaluering',
-          '[ ] Yderligere oplæring efter behov',
-          '',
-          '════════════════════════════════════',
-          'PRAKTISK OPSÆTNING',
-          '════════════════════════════════════',
-          '[ ] Login og adgangskoder',
-          '[ ] Email og kalender',
-          '[ ] Nødvendigt udstyr',
-          '[ ] Vigtige kontakter',
-          '[ ] Interne systemer og platforme',
-        ].filter(l => l !== null).join('\n');
-      } else {
-        return [
-          `ONBOARDING PLAN`,
-          `Employee: ${emp}`,
-          `Company: ${co}`,
-          `Start date: ${deadline || '[insert date]'}`,
-          `Created: ${today()}`,
-          '',
-          '════════════════════════════════════',
-          'DAY 1 — WELCOME',
-          '════════════════════════════════════',
-          '[ ] Welcome and office tour',
-          '[ ] Introduction to colleagues',
-          '[ ] Workspace setup (PC, access, keys)',
-          '[ ] Overview of practical rules',
-          `[ ] Welcome aboard, ${emp}!`,
-          '',
-          '════════════════════════════════════',
-          'FIRST WEEK',
-          '════════════════════════════════════',
-          '[ ] Introduction to tasks and responsibilities',
-          '[ ] Training on systems and tools',
-          '[ ] Meeting with direct manager',
-          '[ ] Review company policies',
-          notes ? '\nROLE-SPECIFIC NOTES:\n' + notes : '',
-          '',
-          '════════════════════════════════════',
-          'FIRST MONTH',
-          '════════════════════════════════════',
-          '[ ] Independent work with support',
-          '[ ] Check-in meeting with manager (week 2)',
-          '[ ] Follow-up conversation (week 4)',
-          '[ ] Feedback and evaluation',
-          '[ ] Additional training as needed',
-          '',
-          '════════════════════════════════════',
-          'PRACTICAL SETUP',
-          '════════════════════════════════════',
-          '[ ] Logins and passwords',
-          '[ ] Email and calendar',
-          '[ ] Required equipment',
-          '[ ] Key contacts',
-          '[ ] Internal systems and platforms',
-        ].filter(l => l !== null).join('\n');
-      }
-    }
-
-    // ── 8. Gør tekst professionel ───────────────────────────────────────────
-    case 'professionel': {
-      if (da) {
-        const intro = toneStyle === 'direct'
-          ? 'Herunder følger en revideret og professionel version af din tekst:'
-          : toneStyle === 'formal'
-          ? 'Nedenstående udgør en professionelt omskrevet version af det indsendte materiale:'
-          : 'Her er en mere poleret version af din tekst — samme indhold, klarere og mere professionelt sprog:';
-        return [
-          `── ORIGINALTEKST ──`,
-          notes,
-          '',
-          `── PROFESSIONEL VERSION ──`,
-          '',
-          intro,
-          '',
-          ...rewriteProfessional(notes, currentLang, toneStyle),
-          '',
-          '(Gennemgå og tilpas teksten efter behov — dette er et udkast.)',
-        ].join('\n');
-      } else {
-        const intro = toneStyle === 'direct'
-          ? 'Below is a revised professional version of your text:'
-          : toneStyle === 'formal'
-          ? 'The following is a professionally rewritten version of the submitted material:'
-          : 'Here is a more polished version of your text — same content, clearer and more professional language:';
-        return [
-          `── ORIGINAL TEXT ──`,
-          notes,
-          '',
-          `── PROFESSIONAL VERSION ──`,
-          '',
-          intro,
-          '',
-          ...rewriteProfessional(notes, currentLang, toneStyle),
-          '',
-          '(Review and adjust the text as needed — this is a draft.)',
-        ].join('\n');
-      }
-    }
-
-    default:
-      return da
-        ? 'Vælg venligst et gyldigt værktøj.'
-        : 'Please select a valid tool.';
-  }
-}
-
-// ── Template helpers ──────────────────────────────────────────────────────────
-
-function buildNumberedSteps(notes, da) {
-  const lines = notes.split('\n').map(l => l.trim()).filter(Boolean);
-  if (lines.length === 0) {
-    return [da ? 'Trin 1: [Beskriv første trin]' : 'Step 1: [Describe first step]'];
-  }
-  return lines.map((line, i) => `${i + 1}. ${capitalizeFirst(line)}`);
-}
-
-function groupLines(lines) {
-  // Simple heuristic: if a line ends with ':' or is short, treat as header
-  const groups = [{ header: '', items: [] }];
-  lines.forEach(line => {
-    if (line.endsWith(':') && line.length < 50) {
-      groups.push({ header: line.replace(/:$/, ''), items: [] });
-    } else {
-      groups[groups.length - 1].items.push(capitalizeFirst(line));
-    }
-  });
-  return groups.filter(g => g.items.length > 0 || g.header);
-}
-
-function rewriteProfessional(text, lang, toneStyle) {
-  const da = lang === 'da';
-  const sentences = text
-    .split(/[.!?\n]+/)
-    .map(s => s.trim())
-    .filter(Boolean);
-
-  return sentences.map((s, i) => {
-    const cap = capitalizeFirst(s);
-    if (toneStyle === 'direct') return cap + (cap.endsWith('.') ? '' : '.');
-    const fillers = da
-      ? ['Vi ønsker at informere om, at ', 'Det skal bemærkes, at ', 'Vi kan oplyse, at ']
-      : ['We would like to inform you that ', 'Please note that ', 'We can confirm that '];
-    if (i === 0 && toneStyle === 'formal') {
-      return fillers[0] + cap.toLowerCase() + '.';
-    }
-    return cap + (cap.endsWith('.') ? '' : '.');
-  });
-}
-
-function capitalizeFirst(str) {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // ── UI Rendering ──────────────────────────────────────────────────────────────
@@ -754,69 +951,48 @@ function renderTools() {
 
 function renderWorkspace() {
   const ws = document.getElementById('workspace');
-  if (!selectedTool) {
-    ws.classList.remove('visible');
-    return;
-  }
+  if (!selectedTool) { ws.classList.remove('visible'); return; }
 
   ws.classList.add('visible');
 
-  // Header
   document.getElementById('wsToolIcon').textContent = selectedTool.icon;
   document.getElementById('wsToolTitle').textContent = toolTitle(selectedTool);
 
-  // Notes area
+  // Notes label + placeholder (per-tool hint)
   document.querySelector('.form-label[for="notesInput"]').textContent = t('notesLabel');
-  document.getElementById('notesInput').placeholder = t('notesPlaceholder');
+  document.getElementById('notesInput').placeholder = toolHint(selectedTool) || t('notesPlaceholder');
 
-  // Optional fields
+  // Optional fields visibility
   const fields = selectedTool.fields;
-  const row1 = document.getElementById('fieldRow1');
-  const row2 = document.getElementById('fieldRow2');
-
-  // Customer + company
-  const customerGroup = document.getElementById('fieldCustomer');
-  const companyGroup = document.getElementById('fieldCompany');
-  const priceGroup = document.getElementById('fieldPrice');
-  const deadlineGroup = document.getElementById('fieldDeadline');
-  const toneGroup = document.getElementById('fieldTone');
-
-  customerGroup.style.display = fields.includes('customer') ? '' : 'none';
-  companyGroup.style.display = fields.includes('company') ? '' : 'none';
-  priceGroup.style.display = fields.includes('price') ? '' : 'none';
-  deadlineGroup.style.display = fields.includes('deadline') ? '' : 'none';
-  toneGroup.style.display = fields.includes('tone') ? '' : 'none';
-
-  // Check if any optional fields exist
-  const hasOptional = fields.length > 0;
-  document.getElementById('optionalFieldsSection').style.display = hasOptional ? '' : 'none';
+  document.getElementById('fieldCustomer').style.display  = fields.includes('customer')  ? '' : 'none';
+  document.getElementById('fieldCompany').style.display   = fields.includes('company')   ? '' : 'none';
+  document.getElementById('fieldPrice').style.display     = fields.includes('price')     ? '' : 'none';
+  document.getElementById('fieldDeadline').style.display  = fields.includes('deadline')  ? '' : 'none';
+  document.getElementById('fieldTone').style.display      = fields.includes('tone')      ? '' : 'none';
+  document.getElementById('optionalFieldsSection').style.display = fields.length > 0 ? '' : 'none';
   document.getElementById('optionalLabel').textContent = t('optionalFields');
 
-  // Labels
+  // Field labels
   document.querySelector('.form-label[for="customerInput"]').textContent = t('customerLabel');
-  document.querySelector('.form-label[for="companyInput"]').textContent = t('companyLabel');
-  document.querySelector('.form-label[for="priceInput"]').textContent = t('priceLabel');
+  document.querySelector('.form-label[for="companyInput"]').textContent  = t('companyLabel');
+  document.querySelector('.form-label[for="priceInput"]').textContent    = t('priceLabel');
   document.querySelector('.form-label[for="deadlineInput"]').textContent = t('deadlineLabel');
-  document.querySelector('.form-label[for="toneSelect"]').textContent = t('toneLabel');
+  document.querySelector('.form-label[for="toneSelect"]').textContent    = t('toneLabel');
 
   // Tone options
   const toneSelect = document.getElementById('toneSelect');
   const tones = t('tones');
-  const currentVal = toneSelect.options[toneSelect.selectedIndex]?.value || tones[0];
   toneSelect.innerHTML = tones.map(tone => `<option value="${tone}">${tone}</option>`).join('');
 
-  // Generate button
-  document.getElementById('generateBtn').textContent = t('generateBtn');
-
-  // Output labels
-  document.getElementById('outputLabel').textContent = t('outputLabel');
-  document.getElementById('copyBtn').textContent = `📋 ${t('copyBtn')}`;
-  document.getElementById('saveBtn').textContent = `💾 ${t('saveBtn')}`;
-  document.getElementById('clearBtn').textContent = `🗑 ${t('clearBtn')}`;
-  document.getElementById('downloadBtn').textContent = `⬇ ${t('downloadBtn')}`;
+  // Buttons / labels
+  document.getElementById('generateBtn').textContent  = t('generateBtn');
+  document.getElementById('outputLabel').textContent  = t('outputLabel');
+  document.getElementById('copyBtn').textContent      = `📋 ${t('copyBtn')}`;
+  document.getElementById('saveBtn').textContent      = `💾 ${t('saveBtn')}`;
+  document.getElementById('clearBtn').textContent     = `🗑 ${t('clearBtn')}`;
+  document.getElementById('downloadBtn').textContent  = `⬇ ${t('downloadBtn')}`;
   document.getElementById('changeToolBtn').textContent = `← ${t('changeToolBtn')}`;
 
-  // Scroll to workspace
   ws.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -859,10 +1035,10 @@ function renderDrafts() {
 }
 
 function updateAllText() {
-  document.getElementById('appName').textContent = t('appName');
-  document.getElementById('appSub').textContent = t('appSub');
+  document.getElementById('appName').textContent   = t('appName');
+  document.getElementById('appSub').textContent    = t('appSub');
   document.getElementById('introTitle').textContent = t('introTitle');
-  document.getElementById('introText').textContent = t('introText');
+  document.getElementById('introText').textContent  = t('introText');
   document.getElementById('toolsLabel').textContent = t('toolsLabel');
   renderTools();
   if (selectedTool) renderWorkspace();
@@ -893,10 +1069,7 @@ function handleGenerate() {
     }
     errMsg.textContent = t('validationMsg');
     textarea.focus();
-    setTimeout(() => {
-      textarea.classList.remove('input-error');
-      errMsg.textContent = '';
-    }, 3000);
+    setTimeout(() => { textarea.classList.remove('input-error'); errMsg.textContent = ''; }, 3000);
     return;
   }
 
@@ -905,19 +1078,18 @@ function handleGenerate() {
   btn.disabled = true;
   btn.classList.add('btn-loading');
 
-  // Simulate slight delay for UX feel (remove when using real API)
+  // Small delay for perceived responsiveness (remove when using real API)
   setTimeout(() => {
     const formData = {
       notes,
       customer: document.getElementById('customerInput').value.trim(),
-      company: document.getElementById('companyInput').value.trim(),
-      price: document.getElementById('priceInput').value.trim(),
+      company:  document.getElementById('companyInput').value.trim(),
+      price:    document.getElementById('priceInput').value.trim(),
       deadline: document.getElementById('deadlineInput').value.trim(),
-      tone: document.getElementById('toneSelect').value,
+      tone:     document.getElementById('toneSelect').value,
     };
 
     currentOutput = generateDraft(selectedTool.id, formData);
-
     document.getElementById('outputBox').textContent = currentOutput;
     document.getElementById('outputSection').classList.add('visible');
     document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -925,7 +1097,7 @@ function handleGenerate() {
     btn.textContent = t('generateBtn');
     btn.disabled = false;
     btn.classList.remove('btn-loading');
-  }, 380);
+  }, 320);
 }
 
 function copyOutput() {
@@ -933,7 +1105,6 @@ function copyOutput() {
   navigator.clipboard.writeText(currentOutput).then(() => {
     showToast(t('copiedMsg'), 'success');
   }).catch(() => {
-    // Fallback
     const ta = document.createElement('textarea');
     ta.value = currentOutput;
     document.body.appendChild(ta);
@@ -946,11 +1117,7 @@ function copyOutput() {
 
 function saveDraft() {
   if (!currentOutput || !selectedTool) return;
-  drafts.push({
-    toolId: selectedTool.id,
-    text: currentOutput,
-    ts: Date.now(),
-  });
+  drafts.push({ toolId: selectedTool.id, text: currentOutput, ts: Date.now() });
   saveDraftsToStorage();
   renderDrafts();
   showToast(t('savedMsg'), 'success');
@@ -1027,16 +1194,13 @@ function setLang(lang) {
     btn.classList.toggle('active', btn.dataset.lang === lang);
   });
   localStorage.setItem('smv_lang', lang);
+  document.documentElement.lang = lang;
   updateAllText();
 }
 
-// ── Notes character counter ───────────────────────────────────────────────────
-
 function updateCharCount() {
-  const ta = document.getElementById('notesInput');
-  const counter = document.getElementById('charCount');
-  const len = ta.value.length;
-  counter.textContent = `${len} ${currentLang === 'da' ? 'tegn' : 'characters'}`;
+  const len = document.getElementById('notesInput').value.length;
+  document.getElementById('charCount').textContent = `${len} ${currentLang === 'da' ? 'tegn' : 'characters'}`;
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -1045,9 +1209,7 @@ function init() {
   loadDrafts();
 
   const savedLang = localStorage.getItem('smv_lang');
-  if (savedLang && (savedLang === 'da' || savedLang === 'en')) {
-    currentLang = savedLang;
-  }
+  if (savedLang === 'da' || savedLang === 'en') currentLang = savedLang;
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.lang === currentLang);
@@ -1061,11 +1223,11 @@ function init() {
   document.getElementById('downloadBtn').addEventListener('click', downloadOutput);
   document.getElementById('changeToolBtn').addEventListener('click', changeTool);
   document.getElementById('notesInput').addEventListener('input', updateCharCount);
-
   document.getElementById('notesInput').addEventListener('keydown', e => {
     if (e.ctrlKey && e.key === 'Enter') handleGenerate();
   });
 
+  document.documentElement.lang = currentLang;
   updateAllText();
   renderDrafts();
 }
