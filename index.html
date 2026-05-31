@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SMV Kontorhjælper — Praktiske tekster og skabeloner til små virksomheder" />
+  <meta name="theme-color" content="#3a7ca5" />
+  <title>SMV Kontorhjælper</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── Header ── -->
+  <header class="app-header" role="banner">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="header-logo" aria-hidden="true">🏢</div>
+        <div class="header-title">
+          <h1 id="appName">SMV Kontorhjælper</h1>
+          <p id="appSub">Praktiske tekster og skabeloner til små virksomheder</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="lang-toggle" role="group" aria-label="Vælg sprog / Choose language">
+          <button class="lang-btn active" data-lang="da" aria-label="Dansk">DA</button>
+          <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main ── -->
+  <main class="app-main" id="appMain" role="main">
+
+    <!-- Intro -->
+    <section class="intro-section" aria-labelledby="introTitle">
+      <h2 id="introTitle">Klar til at spare tid?</h2>
+      <p id="introText">Indsæt dine rå noter, vælg hvad du vil lave, og få et brugbart udkast med det samme.</p>
+    </section>
+
+    <!-- Tool selection -->
+    <section class="tools-section" aria-labelledby="toolsLabel">
+      <p class="section-label" id="toolsLabel">Vælg et værktøj</p>
+      <div class="tools-grid" id="toolsGrid" role="list" aria-label="Tilgængelige værktøjer">
+        <!-- Rendered by app.js -->
+      </div>
+    </section>
+
+    <!-- Workspace -->
+    <section class="workspace" id="workspace" aria-label="Arbejdsområde">
+
+      <!-- Input card -->
+      <div class="workspace-card">
+        <div class="workspace-header">
+          <div class="workspace-tool-name">
+            <span class="workspace-tool-icon" id="wsToolIcon" aria-hidden="true"></span>
+            <span class="workspace-tool-title" id="wsToolTitle"></span>
+          </div>
+          <button class="btn btn-ghost btn-sm" id="changeToolBtn" aria-label="Skift værktøj">
+            ← Skift værktøj
+          </button>
+        </div>
+
+        <!-- Notes textarea -->
+        <div class="form-group">
+          <label class="form-label" for="notesInput">Dine rå noter</label>
+          <textarea
+            class="form-textarea main-notes"
+            id="notesInput"
+            aria-label="Skriv dine rå noter her"
+            aria-required="true"
+            placeholder="Skriv dine rå noter her... Sæt bare stikord ned. Det behøver ikke være perfekt."
+          ></textarea>
+          <span class="char-count" id="charCount" aria-live="polite">0 tegn</span>
+        </div>
+
+        <!-- Optional fields -->
+        <div id="optionalFieldsSection">
+          <p class="section-label" id="optionalLabel" style="margin-top:8px;">Ekstra felter (valgfrit)</p>
+
+          <div class="form-row">
+            <div class="form-group" id="fieldCustomer">
+              <label class="form-label" for="customerInput">Kundenavn (valgfrit)</label>
+              <input type="text" class="form-input" id="customerInput" autocomplete="off" />
+            </div>
+            <div class="form-group" id="fieldCompany">
+              <label class="form-label" for="companyInput">Firmanavn (valgfrit)</label>
+              <input type="text" class="form-input" id="companyInput" autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="fieldPrice">
+              <label class="form-label" for="priceInput">Pris (valgfrit)</label>
+              <input type="text" class="form-input" id="priceInput" placeholder="f.eks. 4.500 kr." autocomplete="off" />
+            </div>
+            <div class="form-group" id="fieldDeadline">
+              <label class="form-label" for="deadlineInput">Frist / dato (valgfrit)</label>
+              <input type="text" class="form-input" id="deadlineInput" placeholder="f.eks. 15/6-2025" autocomplete="off" />
+            </div>
+          </div>
+
+          <div class="form-group" id="fieldTone" style="max-width: 260px;">
+            <label class="form-label" for="toneSelect">Tone</label>
+            <select class="form-select" id="toneSelect" aria-label="Vælg tone">
+              <option>Venlig</option>
+              <option>Professionel</option>
+              <option>Kort og direkte</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Generate button -->
+        <div class="generate-btn-wrap">
+          <button class="btn btn-primary" id="generateBtn" aria-label="Lav udkast (Ctrl+Enter)">
+            Lav udkast
+          </button>
+          <span style="font-size:0.75rem; color: var(--text-light);">Ctrl+Enter</span>
+        </div>
+      </div>
+
+      <!-- Output card -->
+      <div class="workspace-card output-section" id="outputSection">
+        <p class="section-label" id="outputLabel">Dit udkast</p>
+        <div class="output-box" id="outputBox" role="region" aria-label="Genereret tekst" aria-live="polite"></div>
+        <div class="output-actions">
+          <button class="btn btn-secondary" id="copyBtn" aria-label="Kopiér tekst">📋 Kopiér tekst</button>
+          <button class="btn btn-success" id="saveBtn" aria-label="Gem lokalt">💾 Gem lokalt</button>
+          <button class="btn btn-secondary" id="downloadBtn" aria-label="Download som .txt">⬇ Download .txt</button>
+          <button class="btn btn-danger" id="clearBtn" aria-label="Ryd udkast">🗑 Ryd</button>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="section-divider" role="separator"></div>
+
+    <!-- Saved drafts -->
+    <section class="drafts-section" aria-labelledby="draftsLabel">
+      <p class="section-label" id="draftsLabel">Gemte udkast</p>
+      <div id="draftsList">
+        <!-- Rendered by app.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
