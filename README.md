@@ -1,133 +1,76 @@
 # SMV Kontorhjælper
 
-**Praktiske tekster og skabeloner til små virksomheder**  
-*Practical texts and templates for small businesses*
+**Practical business texts for small Danish companies — no login, no setup, free.**
 
-A clean, mobile-friendly web app that helps Danish small businesses, freelancers, and local companies turn rough notes into polished business texts — instantly, no login required.
+🔗 **[Try it live → patrickpstreet-pixel.github.io/SMV-Kontorhjaelperen](https://patrickpstreet-pixel.github.io/SMV-Kontorhjaelperen/)**
 
 ---
 
 ## What it does
 
-Select one of 8 tools, enter rough notes, and get a ready-to-use draft:
+Turn rough notes into polished business texts in seconds. Type whatever you have — even with typos or abbreviations — and get a ready-to-use draft.
 
-| Tool | Dansk | English |
-|------|-------|---------|
-| ✉️ | Kundemail | Customer Email |
-| 📋 | Tilbudstekst | Quotation Text |
-| 🔔 | Rykkermail | Payment Reminder |
-| 📣 | Facebook-opslag | Facebook Post |
-| 📄 | SOP / Arbejdsinstruktion | Work Instruction |
-| ✅ | Tjekliste | Checklist |
-| 👋 | Medarbejder-onboarding | Employee Onboarding |
-| ✨ | Gør tekst professionel | Make Text Professional |
-
-**Features:**
-- Full Danish + English UI
-- Optional fields: customer name, company, price, deadline, tone
-- Copy, save locally, download as .txt
-- Saved drafts via localStorage (survives page reload)
-- Works fully offline — no backend, no API keys, no login
-- Mobile-friendly responsive design
+| | Tool | What it makes |
+|---|---|---|
+| ✉️ | Kundemail | Professional customer email |
+| 📋 | Tilbudstekst | Structured quotation with terms |
+| 🔔 | Rykkermail | Polite payment reminder |
+| 📣 | Facebook-opslag | Engaging post with hashtags |
+| 📄 | SOP / Arbejdsinstruktion | Official work procedure |
+| ✅ | Tjekliste | Structured checklist |
+| 👋 | Medarbejder-onboarding | Complete onboarding plan |
+| ✨ | Gør tekst professionel | Rewrites messy text into clean language |
 
 ---
 
-## How to run locally
+## Features
 
-Just open `index.html` in any modern browser. No build step, no server needed.
+- **Smart auto-correction** — fixes Danish æøå, typos, abbreviations (mvh, evt, ca, osv) and SMS language before generating
+- **Fully bilingual** — Danish and English UI, switch anytime
+- **Tone control** — Venlig / Professionel / Kort og direkte
+- **Save drafts** — stored locally in your browser, survives reload
+- **Copy / Download** — one click to clipboard or .txt file
+- **No login, no server, no data sent anywhere** — runs entirely in the browser
+- **Works offline** after first load
+
+---
+
+## Run locally
+
+Open `index.html` directly in any modern browser — no build step, no server needed.
 
 ```
-Double-click index.html
+double-click index.html
 ```
 
-Or use a local server for best results:
+Or serve it:
+
 ```bash
-# Python
-python -m http.server 8080
-
-# Node.js (npx)
 npx serve .
-```
-
-Then open `http://localhost:8080`
-
----
-
-## How to deploy on GitHub Pages
-
-1. Create a new GitHub repository
-2. Upload all files (`index.html`, `styles.css`, `app.js`) to the root of the `main` branch
-3. Go to **Settings → Pages**
-4. Set source to: **Deploy from a branch → main → / (root)**
-5. Click Save — your app will be live at:
-   `https://yourusername.github.io/your-repo-name`
-
-No build step required. GitHub Pages serves static files directly.
-
----
-
-## MVP Limitations
-
-- **Templates only** — output is generated from local JavaScript templates, not real AI
-- **No persistence across devices** — drafts are saved in browser localStorage only
-- **No PDF export** — .txt download only
-- **No user accounts** — anyone can use the app but nothing is synced
-- **No custom templates** — template logic is hardcoded in `app.js`
-
----
-
-## Future Roadmap
-
-### Phase 1 — Real AI output
-Replace local templates with actual AI generation via a secure serverless function (Vercel, Netlify, or AWS Lambda). The `generateDraft()` function in `app.js` is already structured for this — look for the `FUTURE AI HOOK` comment.
-
-Target: **Claude API** (claude-sonnet-4-6 or newer) via a lightweight proxy endpoint.
-
-### Phase 2 — User accounts
-- Login with email or Google
-- Sync drafts across devices
-- Personal template library
-
-### Phase 3 — Database
-- Store all drafts server-side
-- Search and filter history
-- Team/company shared workspace
-
-### Phase 4 — PDF export
-- Proper PDF generation (letterhead, logo, formatting)
-- Direct print layout
-- Branded templates
-
-### Phase 5 — Subscription / payment
-- Free tier: limited drafts per month
-- Pro tier: unlimited + advanced tools
-- Stripe integration
-
-### Phase 6 — Company-specific templates
-- Upload your own tone of voice
-- Company-specific phrases and sign-offs
-- Logo and branding in outputs
-
----
-
-## Project structure
-
-```
-index.html    — app shell, all HTML structure
-styles.css    — all styles, CSS variables, responsive layout
-app.js        — all logic: templates, state, localStorage, UI
-README.md     — this file
+# → http://localhost:3000
 ```
 
 ---
 
-## Tech stack
+## Deploy your own
 
-- Vanilla HTML / CSS / JavaScript
-- No frameworks, no build tools, no dependencies
-- GitHub Pages compatible (static, no server required)
-- localStorage for draft persistence
+Push to GitHub and enable Pages:
+
+1. **Settings → Pages → Deploy from branch → main → / (root)**
+2. Live in ~60 seconds at `https://yourusername.github.io/your-repo-name`
 
 ---
 
-*Built as MVP — designed to be extended.*
+## Stack
+
+Vanilla HTML + CSS + JavaScript. No frameworks, no dependencies, no build step.
+
+```
+index.html   layout and structure
+styles.css   all styles, CSS variables, responsive
+app.js       tools, generation logic, correction dictionaries, state
+```
+
+---
+
+*Designed for small business owners, freelancers, and anyone who'd rather not spend 20 minutes writing an invoice email.*

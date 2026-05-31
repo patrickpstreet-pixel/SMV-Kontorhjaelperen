@@ -4,150 +4,354 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="SMV Kontorhjælper — Praktiske tekster og skabeloner til små virksomheder" />
-  <meta name="theme-color" content="#3a7ca5" />
   <title>SMV Kontorhjælper</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- ── Header ── -->
-  <header class="app-header" role="banner">
-    <div class="header-inner">
-      <div class="header-brand">
-        <div class="header-logo" aria-hidden="true">🏢</div>
-        <div class="header-title">
-          <h1 id="appName">SMV Kontorhjælper</h1>
-          <p id="appSub">Praktiske tekster og skabeloner til små virksomheder</p>
+<div class="app-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="4" width="20" height="14" rx="2.5" fill="#3b82f6"/>
+          <rect x="5" y="8" width="8" height="1.5" rx="0.75" fill="white" opacity="0.9"/>
+          <rect x="5" y="11" width="5" height="1.5" rx="0.75" fill="white" opacity="0.7"/>
+          <path d="M8 18v3M5 21h6" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="brand-name">SMV Kontorhjælper</span>
+    </div>
+
+    <nav class="sidebar-nav" role="navigation" aria-label="Primær navigation">
+
+      <button class="nav-item active" data-nav="dashboard" id="nav-dashboard">
+        <span class="nav-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.9"/><rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.5"/><rect x="3" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.5"/><rect x="13" y="13" width="8" height="8" rx="1.5" fill="currentColor" opacity="0.7"/></svg>
+        </span>
+        <span class="nav-label">Overblik</span>
+      </button>
+
+      <div class="nav-group-label">Værktøjer</div>
+      <div id="toolsNav"></div>
+
+      <div class="nav-divider"></div>
+
+      <button class="nav-item" data-nav="drafts" id="nav-drafts">
+        <span class="nav-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label">Gemte udkast</span>
+        <span class="nav-badge" id="draftsCount" style="display:none"></span>
+      </button>
+
+      <button class="nav-item" data-nav="help" id="nav-help">
+        <span class="nav-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 17v-5M12 8v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label">Hjælp & tips</span>
+      </button>
+
+      <button class="nav-item" data-nav="settings" id="nav-settings">
+        <span class="nav-icon" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </span>
+        <span class="nav-label">Indstillinger</span>
+      </button>
+
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="userAvatar">P</div>
+      <div class="user-info">
+        <span class="user-name" id="sidebarUserName">Patrice</span>
+        <span class="user-role">SMV ejer</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── APP BODY ── -->
+  <main class="app-body">
+
+    <!-- ══════════════════════════════════════
+         VIEW: DASHBOARD / OVERBLIK
+    ══════════════════════════════════════ -->
+    <div class="view" id="view-dashboard">
+      <div class="dashboard-layout">
+
+        <div class="dashboard-content">
+          <div class="dashboard-header">
+            <div>
+              <h1 class="dash-greeting" id="dashGreeting">Velkommen tilbage 👋</h1>
+              <p class="dash-sub" id="dashSub">Hvad har du brug for i dag?</p>
+            </div>
+            <div class="lang-toggle" role="group" aria-label="Vælg sprog">
+              <button class="lang-btn active" data-lang="da">DA</button>
+              <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+          </div>
+
+          <div class="tools-grid" id="toolsGrid" role="list" aria-label="Tilgængelige værktøjer"></div>
+
+          <div class="dash-section">
+            <div class="dash-section-header">
+              <span class="section-label">Seneste udkast</span>
+              <button class="link-btn" data-nav="drafts">Se alle →</button>
+            </div>
+            <div id="recentDraftsList"></div>
+          </div>
+        </div>
+
+        <div class="dashboard-aside">
+          <div class="tip-panel">
+            <div class="tip-panel-header">
+              <div class="tip-panel-icon">🛡️</div>
+              <div>
+                <div class="tip-panel-title">SMV Kontorhjælper</div>
+                <div class="tip-panel-sub">Spar tid og få mere fra hånden</div>
+              </div>
+            </div>
+            <p class="tip-panel-body" id="tipBody"></p>
+            <div class="tip-progress" id="tipProgress"></div>
+            <button class="tip-next-btn" id="tipNextBtn">Næste tip →</button>
+          </div>
+
+          <div class="guide-panel">
+            <div class="guide-panel-title">Kom i gang på 4 trin</div>
+            <div class="guide-steps">
+              <div class="guide-step">
+                <div class="guide-num">1</div>
+                <div class="guide-text">Vælg et af de 8 værktøjer i oversigten</div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-num">2</div>
+                <div class="guide-text">Skriv dine rå noter — stikord er nok</div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-num">3</div>
+                <div class="guide-text">Tryk "Lav udkast" og få en færdig tekst</div>
+              </div>
+              <div class="guide-step">
+                <div class="guide-num">4</div>
+                <div class="guide-text">Kopiér, gem eller download — klar til brug</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         VIEW: TOOL WORKSPACE
+    ══════════════════════════════════════ -->
+    <div class="view hidden" id="view-tool">
+
+      <div class="tool-topbar">
+        <button class="back-btn" id="backBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Tilbage til overblik
+        </button>
+        <div class="tool-topbar-center">
+          <span class="tool-topbar-icon" id="toolbarIcon"></span>
+          <span class="tool-topbar-title" id="toolbarTitle"></span>
+        </div>
+        <div class="lang-toggle" role="group">
+          <button class="lang-btn active" data-lang="da">DA</button>
+          <button class="lang-btn" data-lang="en">EN</button>
         </div>
       </div>
-      <div class="header-actions">
-        <div class="lang-toggle" role="group" aria-label="Vælg sprog / Choose language">
-          <button class="lang-btn active" data-lang="da" aria-label="Dansk">DA</button>
-          <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+
+      <div class="tool-view-body">
+        <div class="tool-main">
+
+          <div class="card" id="inputCard">
+            <div class="tool-card-header">
+              <div class="tool-header-icon-wrap" id="toolHeaderIconWrap">
+                <span id="toolHeaderIcon"></span>
+              </div>
+              <div>
+                <h2 class="tool-card-heading" id="toolCardHeading"></h2>
+                <p class="tool-card-subtext" id="toolCardSubtext"></p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="notesInput" id="notesLabel">Dine rå noter</label>
+              <textarea class="form-textarea" id="notesInput" aria-required="true"></textarea>
+              <span class="char-count" id="charCount" aria-live="polite">0 tegn</span>
+            </div>
+
+            <div id="optionalFieldsSection">
+              <div class="optional-header">
+                <span class="optional-title" id="optionalTitle">Ekstra oplysninger</span>
+                <span class="optional-badge">valgfrit</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group" id="fieldCustomer">
+                  <label class="form-label" for="customerInput" id="customerLabel">Kundenavn</label>
+                  <input type="text" class="form-input" id="customerInput" autocomplete="off" />
+                </div>
+                <div class="form-group" id="fieldCompany">
+                  <label class="form-label" for="companyInput" id="companyLabel">Firmanavn</label>
+                  <input type="text" class="form-input" id="companyInput" autocomplete="off" />
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group" id="fieldPrice">
+                  <label class="form-label" for="priceInput" id="priceLabel">Pris</label>
+                  <input type="text" class="form-input" id="priceInput" placeholder="f.eks. 4.500 kr." autocomplete="off" />
+                </div>
+                <div class="form-group" id="fieldDeadline">
+                  <label class="form-label" for="deadlineInput" id="deadlineLabel">Frist / dato</label>
+                  <input type="text" class="form-input" id="deadlineInput" placeholder="f.eks. 15/6-2025" autocomplete="off" />
+                </div>
+              </div>
+
+              <div class="form-group tone-group" id="fieldTone">
+                <label class="form-label" id="toneLabel">Tone</label>
+                <div class="tone-pills" id="tonePills" role="radiogroup" aria-label="Vælg tone"></div>
+                <select class="sr-only" id="toneSelect" aria-label="Vælg tone" tabindex="-1">
+                  <option>Venlig</option>
+                  <option>Professionel</option>
+                  <option>Kort og direkte</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="generate-wrap">
+              <button class="btn-generate" id="generateBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z" fill="currentColor"/></svg>
+                <span id="generateBtnText">Lav udkast</span>
+              </button>
+              <span class="shortcut-hint">Ctrl+Enter</span>
+            </div>
+          </div>
+
+          <div class="card output-card hidden" id="outputCard">
+            <div class="output-card-top">
+              <div class="output-card-label" id="outputLabel">Dit udkast</div>
+              <div class="output-card-actions">
+                <button class="btn btn-sm btn-icon-text" id="copyBtn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="8" y="8" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8"/></svg>
+                  <span id="copyBtnText">Kopiér</span>
+                </button>
+                <button class="btn btn-sm btn-success" id="saveBtn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" stroke="currentColor" stroke-width="1.8"/><polyline points="17 21 17 13 7 13 7 21" stroke="currentColor" stroke-width="1.8"/><polyline points="7 3 7 8 15 8" stroke="currentColor" stroke-width="1.8"/></svg>
+                  <span id="saveBtnText">Gem</span>
+                </button>
+                <button class="btn btn-sm btn-icon-text" id="downloadBtn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <span id="downloadBtnText">Download</span>
+                </button>
+                <button class="btn btn-sm btn-danger-ghost" id="clearBtn" aria-label="Ryd udkast">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><polyline points="3 6 5 6 21 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="output-box" id="outputBox" role="region" aria-label="Genereret tekst" aria-live="polite"></div>
+          </div>
+
+        </div>
+
+        <div class="tool-aside">
+          <div class="tool-tip-widget" id="toolTipWidget">
+            <div class="tool-tip-widget-header">
+              <span class="tool-tip-widget-icon" id="toolTipWidgetIcon"></span>
+              <span class="tool-tip-widget-label">Tips til dette værktøj</span>
+            </div>
+            <div class="tool-tip-items" id="toolTipItems"></div>
+          </div>
+
+          <div class="tool-tip-widget">
+            <div class="tool-tip-widget-header">
+              <span>✏️</span>
+              <span class="tool-tip-widget-label">Bedre noter = bedre udkast</span>
+            </div>
+            <ul class="checklist-tips">
+              <li>Brug stikord — grammatik er ikke vigtigt</li>
+              <li>Skriv alle detaljer du kan huske</li>
+              <li>Brug linjeskift til at adskille punkter</li>
+              <li>Navne, priser og datoer giver bedre resultat</li>
+              <li>Jo mere du skriver, desto mere præcist bliver udkastet</li>
+            </ul>
+          </div>
+
+          <div class="tool-tip-widget quality-widget">
+            <div class="quality-header">
+              <span>⭐</span>
+              <span class="tool-tip-widget-label">Kvalitetstjek</span>
+            </div>
+            <p class="quality-text">Gennemlæs altid udkastet og tilpas det til dit eget sprog og stil, inden du sender det.</p>
+          </div>
         </div>
       </div>
     </div>
-  </header>
 
-  <!-- ── Main ── -->
-  <main class="app-main" id="appMain" role="main">
-
-    <!-- Intro -->
-    <section class="intro-section" aria-labelledby="introTitle">
-      <h2 id="introTitle">Klar til at spare tid?</h2>
-      <p id="introText">Indsæt dine rå noter, vælg hvad du vil lave, og få et brugbart udkast med det samme.</p>
-    </section>
-
-    <!-- Tool selection -->
-    <section class="tools-section" aria-labelledby="toolsLabel">
-      <p class="section-label" id="toolsLabel">Vælg et værktøj</p>
-      <div class="tools-grid" id="toolsGrid" role="list" aria-label="Tilgængelige værktøjer">
-        <!-- Rendered by app.js -->
+    <!-- ══════════════════════════════════════
+         VIEW: GEMTE UDKAST
+    ══════════════════════════════════════ -->
+    <div class="view hidden" id="view-drafts">
+      <div class="view-header">
+        <h1 class="view-title">Gemte udkast</h1>
+        <p class="view-sub">Alle dine gemte tekstudkast på ét sted</p>
       </div>
-    </section>
+      <div id="draftsList"></div>
+    </div>
 
-    <!-- Workspace -->
-    <section class="workspace" id="workspace" aria-label="Arbejdsområde">
+    <!-- ══════════════════════════════════════
+         VIEW: HJÆLP & TIPS
+    ══════════════════════════════════════ -->
+    <div class="view hidden" id="view-help">
+      <div class="view-header">
+        <h1 class="view-title">Hjælp & tips</h1>
+        <p class="view-sub">Få mest muligt ud af SMV Kontorhjælper</p>
+      </div>
+      <div class="help-grid" id="helpGrid"></div>
+    </div>
 
-      <!-- Input card -->
-      <div class="workspace-card">
-        <div class="workspace-header">
-          <div class="workspace-tool-name">
-            <span class="workspace-tool-icon" id="wsToolIcon" aria-hidden="true"></span>
-            <span class="workspace-tool-title" id="wsToolTitle"></span>
+    <!-- ══════════════════════════════════════
+         VIEW: INDSTILLINGER
+    ══════════════════════════════════════ -->
+    <div class="view hidden" id="view-settings">
+      <div class="view-header">
+        <h1 class="view-title">Indstillinger</h1>
+        <p class="view-sub">Tilpas SMV Kontorhjælper til din hverdag</p>
+      </div>
+      <div class="settings-body">
+        <div class="card settings-card">
+          <h2 class="settings-section-title">Din profil</h2>
+          <div class="form-group settings-field">
+            <label class="form-label" for="userNameInput">Dit fornavn (vises i hilsenen)</label>
+            <input type="text" class="form-input" id="userNameInput" placeholder="f.eks. Patrice" autocomplete="given-name" style="max-width:260px;" />
           </div>
-          <button class="btn btn-ghost btn-sm" id="changeToolBtn" aria-label="Skift værktøj">
-            ← Skift værktøj
-          </button>
-        </div>
-
-        <!-- Notes textarea -->
-        <div class="form-group">
-          <label class="form-label" for="notesInput">Dine rå noter</label>
-          <textarea
-            class="form-textarea main-notes"
-            id="notesInput"
-            aria-label="Skriv dine rå noter her"
-            aria-required="true"
-            placeholder="Skriv dine rå noter her... Sæt bare stikord ned. Det behøver ikke være perfekt."
-          ></textarea>
-          <span class="char-count" id="charCount" aria-live="polite">0 tegn</span>
-        </div>
-
-        <!-- Optional fields -->
-        <div id="optionalFieldsSection">
-          <p class="section-label" id="optionalLabel" style="margin-top:8px;">Ekstra felter (valgfrit)</p>
-
-          <div class="form-row">
-            <div class="form-group" id="fieldCustomer">
-              <label class="form-label" for="customerInput">Kundenavn (valgfrit)</label>
-              <input type="text" class="form-input" id="customerInput" autocomplete="off" />
-            </div>
-            <div class="form-group" id="fieldCompany">
-              <label class="form-label" for="companyInput">Firmanavn (valgfrit)</label>
-              <input type="text" class="form-input" id="companyInput" autocomplete="off" />
+          <div class="form-group settings-field">
+            <label class="form-label">Sprog</label>
+            <div class="lang-toggle" style="width:fit-content;" role="group">
+              <button class="lang-btn active" data-lang="da">Dansk</button>
+              <button class="lang-btn" data-lang="en">English</button>
             </div>
           </div>
-
-          <div class="form-row">
-            <div class="form-group" id="fieldPrice">
-              <label class="form-label" for="priceInput">Pris (valgfrit)</label>
-              <input type="text" class="form-input" id="priceInput" placeholder="f.eks. 4.500 kr." autocomplete="off" />
-            </div>
-            <div class="form-group" id="fieldDeadline">
-              <label class="form-label" for="deadlineInput">Frist / dato (valgfrit)</label>
-              <input type="text" class="form-input" id="deadlineInput" placeholder="f.eks. 15/6-2025" autocomplete="off" />
-            </div>
-          </div>
-
-          <div class="form-group" id="fieldTone" style="max-width: 260px;">
-            <label class="form-label" for="toneSelect">Tone</label>
-            <select class="form-select" id="toneSelect" aria-label="Vælg tone">
-              <option>Venlig</option>
-              <option>Professionel</option>
-              <option>Kort og direkte</option>
-            </select>
-          </div>
+          <button class="btn-generate" id="saveSettingsBtn" style="font-size:0.88rem;padding:10px 22px;">Gem indstillinger</button>
         </div>
 
-        <!-- Generate button -->
-        <div class="generate-btn-wrap">
-          <button class="btn btn-primary" id="generateBtn" aria-label="Lav udkast (Ctrl+Enter)">
-            Lav udkast
-          </button>
-          <span style="font-size:0.75rem; color: var(--text-light);">Ctrl+Enter</span>
+        <div class="card settings-card">
+          <h2 class="settings-section-title">Data & privatliv</h2>
+          <p class="settings-desc">Alle dine udkast gemmes kun lokalt i din browser. Ingen data sendes til en server.</p>
+          <button class="btn btn-danger-ghost" id="clearAllDraftsBtn" style="margin-top:12px;">Slet alle udkast</button>
         </div>
       </div>
-
-      <!-- Output card -->
-      <div class="workspace-card output-section" id="outputSection">
-        <p class="section-label" id="outputLabel">Dit udkast</p>
-        <div class="output-box" id="outputBox" role="region" aria-label="Genereret tekst" aria-live="polite"></div>
-        <div class="output-actions">
-          <button class="btn btn-secondary" id="copyBtn" aria-label="Kopiér tekst">📋 Kopiér tekst</button>
-          <button class="btn btn-success" id="saveBtn" aria-label="Gem lokalt">💾 Gem lokalt</button>
-          <button class="btn btn-secondary" id="downloadBtn" aria-label="Download som .txt">⬇ Download .txt</button>
-          <button class="btn btn-danger" id="clearBtn" aria-label="Ryd udkast">🗑 Ryd</button>
-        </div>
-      </div>
-
-    </section>
-
-    <div class="section-divider" role="separator"></div>
-
-    <!-- Saved drafts -->
-    <section class="drafts-section" aria-labelledby="draftsLabel">
-      <p class="section-label" id="draftsLabel">Gemte udkast</p>
-      <div id="draftsList">
-        <!-- Rendered by app.js -->
-      </div>
-    </section>
+    </div>
 
   </main>
+</div>
 
-  <!-- Toast notification -->
-  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
