@@ -6,7 +6,7 @@
       automatically within seconds of opening the app.
 ============================================================ */
 
-const VERSION = 5;
+const VERSION = 6;
 const CACHE   = `smv-v${VERSION}`;
 
 const ASSETS = [

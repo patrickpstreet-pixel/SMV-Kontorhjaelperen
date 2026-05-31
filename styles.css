@@ -1178,6 +1178,27 @@ body {
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 .toast.success { background: #15803d; }
 .toast.error   { background: var(--danger); }
+.toast.warn    { background: #b45309; }
+
+/* ── OUTPUT LOADING SPINNER ─────────────────────────────────────────── */
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.output-loading {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.output-loading::after {
+  content: '';
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e8f0;
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
 
 /* ── CORRECTION BADGE ────────────────────────────────────────────────── */
 

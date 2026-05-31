@@ -1,6 +1,11 @@
 /* ============================================================
-   SMV Kontorhjælper — app.js v3
+   SMV Kontorhjælper — app.js v6
    ============================================================ */
+
+// ── AI Worker URL ─────────────────────────────────────────────
+// Paste your Cloudflare Worker URL here after deploying worker.js
+// Leave empty ('') to use built-in template generators as fallback
+const WORKER_URL = '';
 
 // ── Language strings ──────────────────────────────────────────
 
@@ -2050,7 +2055,7 @@ function normalizeField(fieldId) {
   return text;
 }
 
-function handleGenerate() {
+async function handleGenerate() {
   const rawNotes = document.getElementById('notesInput').value.trim();
   const ta = document.getElementById('notesInput');
 
@@ -2062,8 +2067,6 @@ function handleGenerate() {
     return;
   }
 
-  // Gibberish gate — let the tool case handle it gracefully for 'professionel',
-  // but stop other tools completely so they don't generate useless output
   const quality = getInputQuality(rawNotes);
   if (quality === 'gibberish' && selectedTool?.id !== 'professionel') {
     ta.classList.add('input-error');
@@ -2076,38 +2079,79 @@ function handleGenerate() {
     return;
   }
 
-  const btn  = document.getElementById('generateBtn');
-  const text = document.getElementById('generateBtnText');
-  if (text) text.textContent = t('generating');
+  const btn      = document.getElementById('generateBtn');
+  const btnText  = document.getElementById('generateBtnText');
+  const outputBox = document.getElementById('outputBox');
+  const oc        = document.getElementById('outputCard');
+
+  if (btnText) btnText.textContent = t('generating');
   btn.disabled = true;
   btn.classList.add('loading');
 
-  setTimeout(() => {
-    // ── Smart input normalization ──────────────────────────
-    const { text: cleanNotes, count } = normalizeInput(rawNotes, currentLang);
-    showCorrectionBadge(count);
+  // Show output card with loading state immediately
+  outputBox.textContent = '';
+  outputBox.classList.add('output-loading');
+  oc.classList.remove('hidden');
+  oc.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    const tones = t('tones');
-    const toneIndex = document.getElementById('toneSelect').selectedIndex;
-    const formData = {
-      notes:    cleanNotes,
-      customer: normalizeField('customerInput'),
-      company:  normalizeField('companyInput'),
-      price:    document.getElementById('priceInput').value.trim(),
-      deadline: document.getElementById('deadlineInput').value.trim(),
-      tone:     tones[toneIndex] || tones[0],
-    };
+  // Smart input normalization
+  const { text: cleanNotes, count } = normalizeInput(rawNotes, currentLang);
+  showCorrectionBadge(count);
 
-    currentOutput = generateDraft(selectedTool.id, formData);
-    document.getElementById('outputBox').textContent = currentOutput;
-    const oc = document.getElementById('outputCard');
-    oc.classList.remove('hidden');
-    oc.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const tones     = t('tones');
+  const toneIndex = document.getElementById('toneSelect').selectedIndex;
+  const formData  = {
+    notes:    cleanNotes,
+    customer: normalizeField('customerInput'),
+    company:  normalizeField('companyInput'),
+    price:    document.getElementById('priceInput').value.trim(),
+    deadline: document.getElementById('deadlineInput').value.trim(),
+    tone:     tones[toneIndex] || tones[0],
+  };
 
-    if (text) text.textContent = t('generateBtn');
-    btn.disabled = false;
-    btn.classList.remove('loading');
-  }, 300);
+  let result = null;
+
+  if (WORKER_URL) {
+    try {
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toolId:   selectedTool.id,
+          lang:     currentLang,
+          ...formData,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        result = data.output || null;
+      }
+    } catch {
+      // Network error — fall through to template fallback
+    }
+  }
+
+  // Fallback to built-in template generators
+  if (!result) {
+    result = generateDraft(selectedTool.id, formData);
+    if (WORKER_URL) {
+      // Worker was configured but failed — let user know
+      showToast(
+        currentLang === 'da'
+          ? 'AI er midlertidigt utilgængelig — bruger skabelon i stedet'
+          : 'AI temporarily unavailable — using template instead',
+        'warn'
+      );
+    }
+  }
+
+  currentOutput = result;
+  outputBox.classList.remove('output-loading');
+  outputBox.textContent = currentOutput;
+
+  if (btnText) btnText.textContent = t('generateBtn');
+  btn.disabled = false;
+  btn.classList.remove('loading');
 }
 
 function copyOutput() {
