@@ -5,7 +5,7 @@
 // ── AI Worker URL ─────────────────────────────────────────────
 // Paste your Cloudflare Worker URL here after deploying worker.js
 // Leave empty ('') to use built-in template generators as fallback
-const WORKER_URL = '';
+const WORKER_URL = 'https://smv-kontorhjaelper-ai.patrickpstreet.workers.dev';
 
 // ── Language strings ──────────────────────────────────────────
 
