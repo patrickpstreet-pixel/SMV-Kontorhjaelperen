@@ -6,6 +6,9 @@
   <meta name="description" content="SMV Kontorhjælper — Praktiske tekster og skabeloner til små virksomheder" />
   <title>SMV Kontorhjælper</title>
   <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
 </head>
 <body>
 
@@ -352,6 +355,55 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
+<div class="update-banner hidden" id="updateBanner" role="alert">
+  <span class="update-banner-text">🆕 <strong>Ny version klar</strong> — opdater for at få de nyeste rettelser</span>
+  <button class="update-now-btn" id="updateNowBtn">Opdater nu</button>
+  <button class="update-dismiss-btn" id="updateDismissBtn" aria-label="Luk">✕</button>
+</div>
+
 <script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').then(reg => {
+
+      // A new SW is installing (first visit or new version deployed)
+      reg.addEventListener('updatefound', () => {
+        const newSW = reg.installing;
+        newSW.addEventListener('statechange', () => {
+          // New SW is installed and waiting — show update banner
+          if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+            showUpdateBanner();
+          }
+        });
+      });
+
+    }).catch(() => {}); // SW unavailable (file://, old browser) — silent fail
+
+    // SW just took control (after skipWaiting) — reload to get fresh files
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (window._smvUpdating) window.location.reload();
+    });
+  }
+
+  function showUpdateBanner() {
+    const banner = document.getElementById('updateBanner');
+    if (banner) banner.classList.remove('hidden');
+  }
+
+  document.getElementById('updateNowBtn')?.addEventListener('click', () => {
+    window._smvUpdating = true;
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg?.waiting) {
+        reg.waiting.postMessage('skipWaiting');
+      } else {
+        window.location.reload();
+      }
+    });
+  });
+
+  document.getElementById('updateDismissBtn')?.addEventListener('click', () => {
+    document.getElementById('updateBanner')?.classList.add('hidden');
+  });
+</script>
 </body>
 </html>

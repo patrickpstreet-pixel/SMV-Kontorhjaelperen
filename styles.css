@@ -1095,6 +1095,65 @@ body {
 .settings-field { max-width: 340px; }
 .settings-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; }
 
+/* ── UPDATE BANNER ──────────────────────────────────────────────────── */
+
+.update-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1e3a5f;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 200;
+  font-size: 0.82rem;
+  box-shadow: 0 -2px 16px rgba(0,0,0,0.18);
+  animation: slideUp 0.25s ease both;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.update-banner.hidden { display: none; }
+
+.update-banner-text { flex: 1; line-height: 1.4; }
+
+.update-now-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font);
+  transition: background var(--t);
+  flex-shrink: 0;
+}
+
+.update-now-btn:hover { background: #2563eb; }
+
+.update-dismiss-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.6);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color var(--t);
+}
+
+.update-dismiss-btn:hover { color: white; }
+
 /* ── TOAST ──────────────────────────────────────────────────────────── */
 
 .toast {
