@@ -2020,6 +2020,68 @@ function init() {
     showToast(t('deletedMsg'));
   });
 
+  // ── Mobile sidebar toggle ────────────────────────────────────
+  const sidebar  = document.getElementById('sidebar');
+  const overlay  = document.getElementById('sidebarOverlay');
+  const menuBtn  = document.getElementById('mobileMenuBtn');
+
+  function openSidebar() {
+    sidebar?.classList.add('open');
+    overlay?.classList.add('active');
+    menuBtn?.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeSidebar() {
+    sidebar?.classList.remove('open');
+    overlay?.classList.remove('active');
+    menuBtn?.setAttribute('aria-expanded', 'false');
+  }
+
+  menuBtn?.addEventListener('click', () => {
+    sidebar?.classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+
+  overlay?.addEventListener('click', closeSidebar);
+
+  // Close sidebar when a nav item is picked on mobile
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (window.innerWidth <= 680) closeSidebar();
+    });
+  });
+
+  // Escape key closes sidebar
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeSidebar();
+  });
+
+  // ── PWA install prompt ───────────────────────────────────────
+  let deferredInstallPrompt = null;
+
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    const card = document.getElementById('installCard');
+    if (card) card.style.display = '';
+  });
+
+  document.getElementById('installBtn')?.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    const { outcome } = await deferredInstallPrompt.userChoice;
+    if (outcome === 'accepted') {
+      document.getElementById('installCard').style.display = 'none';
+      showToast(currentLang === 'da' ? 'App installeret! 🎉' : 'App installed! 🎉', 'success');
+    }
+    deferredInstallPrompt = null;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    const card = document.getElementById('installCard');
+    if (card) card.style.display = 'none';
+    deferredInstallPrompt = null;
+  });
+
   // Show dashboard on load
   showView('dashboard');
 }

@@ -1218,6 +1218,60 @@ body {
   margin-top: 4px;
 }
 
+/* ── MOBILE MENU BUTTON ──────────────────────────────────────────────── */
+
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 60;
+  width: 38px;
+  height: 38px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-muted);
+  border-radius: 2px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sidebar.open ~ .app-body .mobile-menu-btn span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.sidebar.open ~ .app-body .mobile-menu-btn span:nth-child(2) {
+  opacity: 0;
+}
+.sidebar.open ~ .app-body .mobile-menu-btn span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ── SIDEBAR OVERLAY (mobile) ────────────────────────────────────────── */
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 49;
+  backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.active { display: block; }
+
 /* ── RESPONSIVE ──────────────────────────────────────────────────────── */
 
 @media (max-width: 1024px) {
@@ -1232,13 +1286,21 @@ body {
 }
 
 @media (max-width: 680px) {
-  .sidebar { transform: translateX(-100%); transition: transform 0.25s ease; }
-  .sidebar.open { transform: translateX(0); box-shadow: var(--shadow-md); }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-md);
+  }
   .app-body { margin-left: 0; }
-  .view { padding: 20px 16px 50px; }
-  .tool-topbar { padding: 10px 14px; }
+  .view { padding: 20px 16px 60px; }
+  .tool-topbar { padding: 10px 14px 10px 58px; }
   .form-row { grid-template-columns: 1fr; }
   .tools-grid { gap: 9px; }
+  .mobile-menu-btn { display: flex; }
+  .dashboard-header { padding-top: 48px; }
 }
 
 @media (max-width: 420px) {

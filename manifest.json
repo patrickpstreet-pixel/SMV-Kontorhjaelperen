@@ -1,0 +1,23 @@
+{
+  "name": "SMV Kontorhjælper",
+  "short_name": "SMV Kontor",
+  "description": "Praktiske tekster og skabeloner til små virksomheder — ingen login, ingen server.",
+  "lang": "da",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f6fa",
+  "theme_color": "#3b82f6",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

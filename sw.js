@@ -6,7 +6,7 @@
       automatically within seconds of opening the app.
 ============================================================ */
 
-const VERSION = 3;
+const VERSION = 4;
 const CACHE   = `smv-v${VERSION}`;
 
 const ASSETS = [
@@ -14,6 +14,8 @@ const ASSETS = [
   './index.html',
   './styles.css',
   './app.js',
+  './manifest.json',
+  './icon.svg',
 ];
 
 // ── Install: pre-cache all app files ──────────────────────────

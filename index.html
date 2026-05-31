@@ -9,9 +9,13 @@
   <meta name="theme-color" content="#3b82f6" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="SMV Kontor" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
 </head>
 <body>
 
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 <div class="app-layout">
 
   <!-- ── SIDEBAR ── -->
@@ -77,6 +81,9 @@
 
   <!-- ── APP BODY ── -->
   <main class="app-body">
+  <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Åbn menu">
+    <span></span><span></span><span></span>
+  </button>
 
     <!-- ══════════════════════════════════════
          VIEW: DASHBOARD / OVERBLIK
@@ -340,6 +347,14 @@
             </div>
           </div>
           <button class="btn-generate" id="saveSettingsBtn" style="font-size:0.88rem;padding:10px 22px;">Gem indstillinger</button>
+        </div>
+
+        <div class="card settings-card" id="installCard" style="display:none;">
+          <h2 class="settings-section-title">Installer som app</h2>
+          <p class="settings-desc">Tilføj SMV Kontorhjælper til din startskærm — virker som en rigtig app, ingen app store nødvendig.</p>
+          <button class="btn-generate" id="installBtn" style="font-size:0.88rem;padding:10px 22px;margin-top:12px;">
+            📲 Installer app
+          </button>
         </div>
 
         <div class="card settings-card">
